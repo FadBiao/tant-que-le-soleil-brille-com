@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, Users, Heart, Ticket } from "lucide-react";
 import clubReading from "@/assets/club-reading.jpg";
+import { ReservationModal } from "./ReservationModal";
 
 const ClubSection = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <section id="club" className="py-24 bg-gradient-dawn">
       <div className="container mx-auto px-4">
@@ -70,10 +74,19 @@ const ClubSection = () => {
               </div>
             </div>
 
-            <Button size="lg" className="bg-gradient-sun shadow-glow">
+            <Button 
+              size="lg" 
+              className="bg-gradient-sun shadow-glow"
+              onClick={() => setIsModalOpen(true)}
+            >
               <Ticket className="mr-2 h-5 w-5" />
               Réserver ma Place
             </Button>
+            
+            <ReservationModal 
+              open={isModalOpen} 
+              onOpenChange={setIsModalOpen} 
+            />
           </div>
 
           <div className="order-1 md:order-2 animate-fade-in">
