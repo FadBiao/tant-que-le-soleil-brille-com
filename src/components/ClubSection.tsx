@@ -9,11 +9,11 @@ const ClubSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 animate-fade-in">
           <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4 text-foreground">
-            Le Club de Lecture
+            Le Club d'Écriture
           </h2>
           <p className="font-poppins text-lg text-muted-foreground max-w-2xl mx-auto">
-            Un espace chaleureux où se retrouver, partager et grandir ensemble
-            à travers la lecture et les échanges inspirants.
+            Un espace chaleureux où libérer votre créativité, partager vos mots et grandir ensemble
+            à travers l'écriture et les échanges inspirants.
           </p>
         </div>
 
@@ -33,8 +33,8 @@ const ClubSection = () => {
                     Créer des Liens
                   </h4>
                   <p className="font-poppins text-sm text-muted-foreground">
-                    Rencontrez des personnes inspirantes qui partagent votre passion
-                    pour le développement personnel.
+                    Rencontrez des auteurs en herbe et des plumes confirmées qui partagent
+                    votre passion pour l'écriture et la créativité.
                   </p>
                 </div>
               </div>
@@ -48,8 +48,8 @@ const ClubSection = () => {
                     Partager & Grandir
                   </h4>
                   <p className="font-poppins text-sm text-muted-foreground">
-                    Échangez vos réflexions et découvertes dans une ambiance
-                    bienveillante et chaleureuse.
+                    Partagez vos textes, recevez des retours bienveillants et progressez
+                    dans votre art dans une ambiance chaleureuse.
                   </p>
                 </div>
               </div>
@@ -60,11 +60,11 @@ const ClubSection = () => {
                 </div>
                 <div>
                   <h4 className="font-poppins font-semibold mb-1 text-foreground">
-                    Rendez-vous Réguliers
+                    Ateliers Réguliers
                   </h4>
                   <p className="font-poppins text-sm text-muted-foreground">
-                    Des rencontres mensuelles pour cultiver ensemble la lumière
-                    et la positivité.
+                    Des ateliers mensuels avec exercices créatifs pour explorer
+                    votre plume et libérer votre imagination.
                   </p>
                 </div>
               </div>
@@ -79,7 +79,7 @@ const ClubSection = () => {
           <div className="order-1 md:order-2 animate-fade-in">
             <img 
               src={clubReading}
-              alt="Club de Lecture"
+              alt="Club d'Écriture - Tant que le Soleil Brille"
               className="rounded-2xl shadow-soft hover:shadow-glow transition-shadow duration-300"
             />
           </div>
@@ -88,21 +88,21 @@ const ClubSection = () => {
         {/* Nos Lecteurs en Lumière */}
         <div className="mt-16 animate-fade-in">
           <h3 className="font-playfair text-3xl font-semibold text-center mb-8 text-foreground">
-            Nos Lecteurs en Lumière
+            Nos Auteurs en Lumière
           </h3>
           
           <div className="grid md:grid-cols-3 gap-6">
             {[
               {
-                quote: "Ce club a changé ma vie. J'ai trouvé une famille bienveillante.",
+                quote: "Ce club a libéré ma plume. J'ai enfin osé écrire mon premier roman.",
                 author: "Marie"
               },
               {
-                quote: "Chaque rencontre est un moment de pure magie et d'inspiration.",
+                quote: "Chaque atelier est une source d'inspiration. J'ai trouvé ma voix.",
                 author: "Thomas"
               },
               {
-                quote: "Grâce au club, j'ai appris à voir la beauté en toute chose.",
+                quote: "Grâce au club, mes mots prennent vie et illuminent les pages.",
                 author: "Sophie"
               }
             ].map((testimonial, index) => (
