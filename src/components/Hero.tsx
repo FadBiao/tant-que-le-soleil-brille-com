@@ -34,7 +34,7 @@ const Hero = () => {
             {heroImages.map((image, index) => (
               <CarouselItem key={index} className="h-screen">
                 <div 
-                  className="h-full w-full bg-cover bg-center transition-opacity duration-1000"
+                  className="h-full w-full bg-cover bg-center duration-1000"
                   style={{ backgroundImage: `url(${image})` }}
                 />
               </CarouselItem>
