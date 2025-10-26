@@ -10,7 +10,7 @@ const Navbar = () => {
     { name: "Accueil", href: "#accueil" },
     { name: "Podcasts", href: "#podcasts" },
     { name: "Le Livre", href: "#livre" },
-    { name: "Club de Lecture", href: "#club" },
+    { name: "Club d'Ecriture", href: "#club" },
     { name: "Galerie", href: "#galerie" },
     { name: "Contact", href: "#contact" },
   ];
