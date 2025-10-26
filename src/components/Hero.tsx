@@ -1,15 +1,46 @@
 import { Button } from "@/components/ui/button";
 import { Headphones, BookOpen, Sparkles } from "lucide-react";
-import heroImage from "@/assets/hero-sun.jpg";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import heroSun from "@/assets/hero-sun.jpg";
+import heroSunsetOcean from "@/assets/hero-sunset-ocean.jpg";
+import heroSparklesWater from "@/assets/hero-sparkles-water.jpg";
+import heroSunOcean from "@/assets/hero-sun-ocean.jpg";
+import heroGoldenPath from "@/assets/hero-golden-path.jpg";
 
 const Hero = () => {
+  const heroImages = [
+    heroSun,
+    heroSunsetOcean,
+    heroSparklesWater,
+    heroSunOcean,
+    heroGoldenPath
+  ];
+
   return (
     <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${heroImage})` }}
-      >
+      {/* Background Carousel with Overlay */}
+      <div className="absolute inset-0">
+        <Carousel
+          opts={{ loop: true }}
+          plugins={[
+            Autoplay({
+              delay: 5000,
+            }),
+          ]}
+          className="h-full w-full"
+        >
+          <CarouselContent className="h-full">
+            {heroImages.map((image, index) => (
+              <CarouselItem key={index} className="h-screen">
+                <div 
+                  className="h-full w-full bg-cover bg-center transition-opacity duration-1000"
+                  style={{ backgroundImage: `url(${image})` }}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background"></div>
       </div>
 
