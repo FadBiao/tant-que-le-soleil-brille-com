@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Dialog,
   DialogContent,
@@ -51,31 +52,55 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
     setIsSubmitting(true);
     
     try {
-      // TODO: Intégrer avec Stripe et le backend
-      console.log("Données de réservation:", data);
-      
       toast({
         title: "☀️ Réservation en cours",
         description: "Nous préparons votre inscription au Club d'Écriture...",
       });
 
-      // Simuler l'envoi
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Get the first active event
+      const { data: events, error: eventsError } = await supabase
+        .from('events')
+        .select('*')
+        .eq('status', 'active')
+        .order('event_date', { ascending: true })
+        .limit(1);
 
-      toast({
-        title: "✨ Soleil sur toi, ta place est confirmée!",
-        description: "Vous recevrez un email de confirmation sous peu.",
-      });
+      if (eventsError || !events || events.length === 0) {
+        throw new Error('Aucun événement disponible');
+      }
 
-      form.reset();
-      onOpenChange(false);
+      const event = events[0];
+
+      // Create checkout session
+      const { data: sessionData, error: sessionError } = await supabase.functions.invoke(
+        'create-checkout-session',
+        {
+          body: {
+            eventId: event.id,
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+          },
+        }
+      );
+
+      if (sessionError || !sessionData) {
+        throw new Error(sessionError?.message || 'Erreur lors de la création de la session');
+      }
+
+      // Redirect to Stripe Checkout
+      if (sessionData.url) {
+        window.location.href = sessionData.url;
+      } else {
+        throw new Error('URL de paiement non disponible');
+      }
     } catch (error) {
+      console.error('Reservation error:', error);
       toast({
         title: "Erreur",
-        description: "Une erreur est survenue. Veuillez réessayer.",
+        description: error instanceof Error ? error.message : "Une erreur est survenue. Veuillez réessayer.",
         variant: "destructive",
       });
-    } finally {
       setIsSubmitting(false);
     }
   };
