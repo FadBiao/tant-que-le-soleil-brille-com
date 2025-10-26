@@ -1,6 +1,7 @@
-import { Sun, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +21,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <a href="#accueil" className="flex items-center gap-2 group">
-            <Sun className="h-8 w-8 text-primary animate-glow-pulse" />
+            <img src={logo} alt="Tant que le Soleil Brille" className="h-10 w-10 animate-glow-pulse" />
             <span className="font-playfair text-2xl font-bold text-foreground">
               Tant que le Soleil Brille
             </span>
