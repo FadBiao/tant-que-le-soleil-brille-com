@@ -14,7 +14,140 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      events: {
+        Row: {
+          capacity: number | null
+          created_at: string
+          description: string | null
+          event_date: string
+          id: string
+          location: string
+          name: string
+          price_cents: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          capacity?: number | null
+          created_at?: string
+          description?: string | null
+          event_date: string
+          id?: string
+          location: string
+          name: string
+          price_cents: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          capacity?: number | null
+          created_at?: string
+          description?: string | null
+          event_date?: string
+          id?: string
+          location?: string
+          name?: string
+          price_cents?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          event_id: string
+          id: string
+          status: string
+          stripe_payment_intent_id: string | null
+          stripe_session_id: string | null
+          updated_at: string
+          user_email: string
+          user_name: string
+          user_phone: string | null
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          event_id: string
+          id?: string
+          status?: string
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_email: string
+          user_name: string
+          user_phone?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          event_id?: string
+          id?: string
+          status?: string
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_email?: string
+          user_name?: string
+          user_phone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tickets: {
+        Row: {
+          attendee_email: string
+          attendee_name: string
+          created_at: string
+          event_id: string
+          id: string
+          order_id: string
+          qr_token: string
+        }
+        Insert: {
+          attendee_email: string
+          attendee_name: string
+          created_at?: string
+          event_id: string
+          id?: string
+          order_id: string
+          qr_token: string
+        }
+        Update: {
+          attendee_email?: string
+          attendee_name?: string
+          created_at?: string
+          event_id?: string
+          id?: string
+          order_id?: string
+          qr_token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tickets_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tickets_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
