@@ -91,15 +91,20 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
 
       console.log('Checkout session response:', sessionData);
 
-      // Redirect to Stripe Checkout
+      // Open Stripe Checkout in a new tab (required because Lovable preview is in iframe)
       if (sessionData.url) {
-        console.log('Redirecting to Stripe:', sessionData.url);
-        // Close the modal before redirecting
+        console.log('Opening Stripe in new tab:', sessionData.url);
+        window.open(sessionData.url, '_blank');
+        
+        toast({
+          title: "✅ Paiement ouvert",
+          description: "Complétez votre paiement dans le nouvel onglet",
+        });
+        
+        // Close modal and reset form
         onOpenChange(false);
-        // Use a small delay to ensure the modal closes
-        setTimeout(() => {
-          window.location.assign(sessionData.url);
-        }, 100);
+        form.reset();
+        setIsSubmitting(false);
       } else {
         throw new Error('URL de paiement non disponible');
       }
