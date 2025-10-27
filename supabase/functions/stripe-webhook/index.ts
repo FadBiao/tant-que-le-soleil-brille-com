@@ -33,10 +33,17 @@ serve(async (req) => {
   const signature = req.headers.get('stripe-signature');
   
   if (!signature) {
-    return new Response(JSON.stringify({ error: 'No signature' }), {
-      status: 400,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    console.error('Webhook missing signature');
+    return new Response(
+      JSON.stringify({ 
+        error: 'Invalid request',
+        code: 'MISSING_SIGNATURE'
+      }), 
+      {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
   }
 
   try {
@@ -63,11 +70,17 @@ serve(async (req) => {
       const orderId = session.metadata?.order_id;
 
       if (!orderId) {
-        console.error('No order_id in session metadata');
-        return new Response(JSON.stringify({ error: 'No order_id' }), {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        console.error('Webhook session missing order_id in metadata');
+        return new Response(
+          JSON.stringify({ 
+            error: 'Invalid session data',
+            code: 'MISSING_ORDER_ID'
+          }), 
+          {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
       }
 
       // Update order status
@@ -82,11 +95,17 @@ serve(async (req) => {
         .single();
 
       if (orderError || !order) {
-        console.error('Order update error:', orderError);
-        return new Response(JSON.stringify({ error: 'Order not found' }), {
-          status: 404,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        console.error('Order update failed:', orderError);
+        return new Response(
+          JSON.stringify({ 
+            error: 'Unable to process order',
+            code: 'ORDER_UPDATE_FAILED'
+          }), 
+          {
+            status: 404,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
       }
 
       // Generate QR token
@@ -106,11 +125,17 @@ serve(async (req) => {
         .single();
 
       if (ticketError || !ticket) {
-        console.error('Ticket creation error:', ticketError);
-        return new Response(JSON.stringify({ error: 'Failed to create ticket' }), {
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        console.error('Ticket creation failed:', ticketError);
+        return new Response(
+          JSON.stringify({ 
+            error: 'Unable to generate ticket',
+            code: 'TICKET_CREATION_FAILED'
+          }), 
+          {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
       }
 
       // Generate QR code URL
@@ -228,9 +253,16 @@ L'équipe Tant que le Soleil Brille
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error('Webhook error:', error);
+    console.error('Webhook processing error:', {
+      message: (error as Error).message,
+      stack: (error as Error).stack,
+      name: (error as Error).name,
+    });
     return new Response(
-      JSON.stringify({ error: (error as Error).message }),
+      JSON.stringify({ 
+        error: 'Webhook processing failed',
+        code: 'WEBHOOK_ERROR'
+      }),
       {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

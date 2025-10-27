@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, XCircle, ArrowLeft, Search } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { Link, useNavigate } from "react-router-dom";
+import { Home } from "lucide-react";
+import type { User } from "@supabase/supabase-js";
 
 interface VerificationResult {
   valid: boolean;
@@ -27,19 +28,53 @@ interface VerificationResult {
 }
 
 const AdminCheckin = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
   const [token, setToken] = useState("");
   const [result, setResult] = useState<VerificationResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check authentication and admin role
+    const checkAuth = async () => {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      
+      if (error || !user) {
+        toast.error("Accès refusé. Veuillez vous connecter.");
+        navigate('/');
+        return;
+      }
+
+      setUser(user);
+
+      // Check if user has admin or organizer role
+      const { data: roleData, error: roleError } = await supabase
+        .from('admin_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .in('role', ['admin', 'organizer'])
+        .maybeSingle();
+
+      if (roleError || !roleData) {
+        toast.error("Accès refusé. Vous n'avez pas les permissions nécessaires.");
+        navigate('/');
+        return;
+      }
+
+      setIsAdmin(true);
+      setAuthLoading(false);
+    };
+
+    checkAuth();
+  }, [navigate]);
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!token.trim()) {
-      toast({
-        title: "Erreur",
-        description: "Veuillez entrer un code QR",
-        variant: "destructive",
-      });
+      toast.error("Veuillez entrer un code de vérification");
       return;
     }
 
@@ -56,24 +91,13 @@ const AdminCheckin = () => {
       setResult(data);
       
       if (data.valid) {
-        toast({
-          title: "✅ Billet Valide",
-          description: `${data.attendee?.name} - Entrée autorisée`,
-        });
+        toast.success(`Billet valide: ${data.attendee?.name}`);
       } else {
-        toast({
-          title: "⛔ Billet Non Valide",
-          description: getReasonText(data.reason),
-          variant: "destructive",
-        });
+        toast.error(`Billet invalide: ${getReasonText(data.reason)}`);
       }
     } catch (error) {
       console.error('Verification error:', error);
-      toast({
-        title: "Erreur",
-        description: "Erreur lors de la vérification",
-        variant: "destructive",
-      });
+      toast.error("Erreur lors de la vérification");
     } finally {
       setLoading(false);
     }
@@ -82,112 +106,108 @@ const AdminCheckin = () => {
   const getReasonText = (reason: string | null) => {
     switch (reason) {
       case 'MISSING_TOKEN':
-        return 'Code QR invalide ou manquant';
+        return 'Code invalide ou manquant';
       case 'UNKNOWN_TOKEN':
-        return 'Ce billet n\'existe pas';
+        return 'Billet non trouvé';
       case 'UNPAID':
         return 'Paiement non confirmé';
       case 'EVENT_MISMATCH':
         return 'Billet pour un autre événement';
       case 'ERROR':
         return 'Erreur de vérification';
+      case 'RATE_LIMIT':
+        return 'Trop de tentatives, réessayez plus tard';
       default:
         return 'Erreur inconnue';
     }
   };
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto"></div>
+          <p className="mt-4 text-amber-900">Vérification des permissions...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user || !isAdmin) {
+    return null;
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-dawn py-12 px-4">
-      <div className="container mx-auto max-w-2xl">
-        <Link to="/">
-          <Button variant="ghost" className="mb-6">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Retour à l'accueil
-          </Button>
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 p-4">
+      <div className="max-w-2xl mx-auto pt-8">
+        <Link to="/" className="inline-flex items-center gap-2 text-amber-900 hover:text-amber-700 mb-6">
+          <Home className="w-5 h-5" />
+          Retour à l'accueil
         </Link>
 
-        <Card>
-          <CardContent className="p-8">
-            <h1 className="font-playfair text-3xl font-bold mb-6 text-center">
-              🎟️ Contrôle des Billets
-            </h1>
-
-            <form onSubmit={handleVerify} className="space-y-4 mb-8">
+        <Card className="shadow-xl">
+          <CardHeader>
+            <CardTitle className="text-3xl text-center">
+              🔍 Contrôle des Billets
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleVerify} className="space-y-6">
               <div>
-                <label className="font-poppins font-semibold mb-2 block">
-                  Code QR ou Token
+                <label className="block text-sm font-medium mb-2">
+                  Code de vérification ou Token
                 </label>
-                <div className="flex gap-2">
-                  <Input
-                    type="text"
-                    value={token}
-                    onChange={(e) => setToken(e.target.value)}
-                    placeholder="Entrer le code QR..."
-                    className="flex-1"
-                  />
-                  <Button
-                    type="submit"
-                    disabled={loading}
-                    className="bg-gradient-sun shadow-glow"
-                  >
-                    <Search className="mr-2 h-4 w-4" />
-                    {loading ? "Vérification..." : "Vérifier"}
-                  </Button>
-                </div>
-                <p className="font-poppins text-sm text-muted-foreground mt-2">
-                  Scannez le QR code ou collez le token manuellement
+                <Input
+                  type="text"
+                  value={token}
+                  onChange={(e) => setToken(e.target.value)}
+                  placeholder="Entrer le code..."
+                  className="w-full"
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Scannez le QR code ou entrez le token manuellement
                 </p>
               </div>
+
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600"
+              >
+                {loading ? "Vérification..." : "Vérifier le billet"}
+              </Button>
             </form>
 
             {result && (
-              <Card
-                className={`${
-                  result.valid
-                    ? 'border-green-500 bg-green-50'
-                    : 'border-red-500 bg-red-50'
-                }`}
-              >
+              <Card className={`mt-6 ${result.valid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}`}>
                 <CardContent className="p-6">
                   <div className="text-center mb-4">
-                    {result.valid ? (
-                      <>
-                        <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
-                        <h2 className="font-playfair text-2xl font-bold text-green-800">
-                          ✅ VALIDE
-                        </h2>
-                      </>
-                    ) : (
-                      <>
-                        <XCircle className="h-16 w-16 text-red-600 mx-auto mb-4" />
-                        <h2 className="font-playfair text-2xl font-bold text-red-800">
-                          ⛔ NON VALIDE
-                        </h2>
-                      </>
+                    <div className={`text-6xl mb-2`}>
+                      {result.valid ? '✅' : '❌'}
+                    </div>
+                    <h2 className="text-2xl font-bold mb-2">
+                      {result.valid ? 'BILLET VALIDE' : 'BILLET NON VALIDE'}
+                    </h2>
+                    {!result.valid && (
+                      <p className="text-red-700 font-semibold">
+                        {getReasonText(result.reason)}
+                      </p>
                     )}
                   </div>
 
                   {result.attendee && (
                     <div className="bg-white p-4 rounded-lg mb-4">
-                      <h3 className="font-poppins font-semibold mb-2">
-                        Participant
-                      </h3>
-                      <p className="font-poppins text-lg font-bold">
-                        {result.attendee.name}
-                      </p>
-                      <p className="font-poppins text-sm text-muted-foreground">
-                        {result.attendee.email}
-                      </p>
+                      <h3 className="font-semibold mb-2">👤 Participant</h3>
+                      <p className="text-lg font-bold">{result.attendee.name}</p>
+                      <p className="text-sm text-muted-foreground">{result.attendee.email}</p>
                     </div>
                   )}
 
                   {result.event && (
-                    <div className="bg-white p-4 rounded-lg mb-4">
-                      <h3 className="font-poppins font-semibold mb-2">
-                        Événement
-                      </h3>
-                      <p className="font-poppins">{result.event.name}</p>
-                      <p className="font-poppins text-sm text-muted-foreground">
+                    <div className="bg-white p-4 rounded-lg">
+                      <h3 className="font-semibold mb-2">📅 Événement</h3>
+                      <p className="font-medium">{result.event.name}</p>
+                      <p className="text-sm text-muted-foreground">
                         {new Date(result.event.date).toLocaleDateString('fr-FR', {
                           weekday: 'long',
                           year: 'numeric',
@@ -195,14 +215,7 @@ const AdminCheckin = () => {
                           day: 'numeric',
                         })}
                       </p>
-                    </div>
-                  )}
-
-                  {!result.valid && result.reason && (
-                    <div className="bg-white p-4 rounded-lg">
-                      <p className="font-poppins text-red-700 font-semibold">
-                        Raison : {getReasonText(result.reason)}
-                      </p>
+                      <p className="text-sm text-muted-foreground">📍 {result.event.location}</p>
                     </div>
                   )}
                 </CardContent>

@@ -7,9 +7,65 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Rate limiting helper
+async function checkRateLimit(supabase: any, key: string, limit: number, windowMinutes: number): Promise<{ allowed: boolean; resetAt?: Date }> {
+  const now = new Date();
+  const windowStart = new Date(now.getTime() - windowMinutes * 60 * 1000);
+
+  // Clean old entries
+  await supabase.from('rate_limits').delete().lt('reset_at', now.toISOString());
+
+  // Get current attempts
+  const { data: existing } = await supabase
+    .from('rate_limits')
+    .select('*')
+    .eq('key', key)
+    .gte('reset_at', now.toISOString())
+    .maybeSingle();
+
+  if (existing && existing.count >= limit) {
+    return { allowed: false, resetAt: new Date(existing.reset_at) };
+  }
+
+  // Increment or create
+  if (existing) {
+    await supabase
+      .from('rate_limits')
+      .update({ count: existing.count + 1, updated_at: now.toISOString() })
+      .eq('id', existing.id);
+  } else {
+    const resetAt = new Date(now.getTime() + windowMinutes * 60 * 1000);
+    await supabase
+      .from('rate_limits')
+      .insert({ key, count: 1, reset_at: resetAt.toISOString() });
+  }
+
+  return { allowed: true };
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL') ?? '',
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+  );
+
+  // Rate limiting: 10 requests per 10 minutes per IP
+  const clientIp = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+  const rateLimitKey = `checkout:${clientIp}`;
+  const rateLimit = await checkRateLimit(supabase, rateLimitKey, 10, 10);
+  
+  if (!rateLimit.allowed) {
+    return new Response(
+      JSON.stringify({ 
+        error: 'Too many requests. Please try again later.',
+        code: 'RATE_LIMIT_EXCEEDED'
+      }),
+      { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
   }
 
   try {
@@ -17,16 +73,14 @@ serve(async (req) => {
       apiVersion: '2023-10-16',
     });
 
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    );
-
     const { eventId, name, email, phone } = await req.json();
 
     if (!eventId || !name || !email) {
       return new Response(
-        JSON.stringify({ error: 'Missing required fields' }),
+        JSON.stringify({ 
+          error: 'Missing required information. Please fill in all fields.',
+          code: 'MISSING_FIELDS'
+        }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -39,9 +93,12 @@ serve(async (req) => {
       .single();
 
     if (eventError || !event) {
-      console.error('Event error:', eventError);
+      console.error('Event lookup error:', eventError);
       return new Response(
-        JSON.stringify({ error: 'Event not found' }),
+        JSON.stringify({ 
+          error: 'The requested event could not be found.',
+          code: 'EVENT_NOT_FOUND'
+        }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -63,7 +120,10 @@ serve(async (req) => {
     if (orderError || !order) {
       console.error('Order creation error:', orderError);
       return new Response(
-        JSON.stringify({ error: 'Failed to create order' }),
+        JSON.stringify({ 
+          error: 'Unable to process your reservation. Please try again.',
+          code: 'ORDER_CREATION_FAILED'
+        }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -110,9 +170,15 @@ serve(async (req) => {
       }
     );
   } catch (error) {
-    console.error('Error creating checkout session:', error);
+    console.error('Checkout session creation error:', {
+      message: (error as Error).message,
+      stack: (error as Error).stack,
+    });
     return new Response(
-      JSON.stringify({ error: (error as Error).message }),
+      JSON.stringify({ 
+        error: 'An error occurred while processing your request. Please try again.',
+        code: 'CHECKOUT_ERROR'
+      }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

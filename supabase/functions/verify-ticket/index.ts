@@ -6,9 +6,67 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Rate limiting helper
+async function checkRateLimit(supabase: any, key: string, limit: number, windowMinutes: number): Promise<{ allowed: boolean; resetAt?: Date }> {
+  const now = new Date();
+  
+  // Clean old entries
+  await supabase.from('rate_limits').delete().lt('reset_at', now.toISOString());
+
+  // Get current attempts
+  const { data: existing } = await supabase
+    .from('rate_limits')
+    .select('*')
+    .eq('key', key)
+    .gte('reset_at', now.toISOString())
+    .maybeSingle();
+
+  if (existing && existing.count >= limit) {
+    return { allowed: false, resetAt: new Date(existing.reset_at) };
+  }
+
+  // Increment or create
+  if (existing) {
+    await supabase
+      .from('rate_limits')
+      .update({ count: existing.count + 1, updated_at: now.toISOString() })
+      .eq('id', existing.id);
+  } else {
+    const resetAt = new Date(now.getTime() + windowMinutes * 60 * 1000);
+    await supabase
+      .from('rate_limits')
+      .insert({ key, count: 1, reset_at: resetAt.toISOString() });
+  }
+
+  return { allowed: true };
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL') ?? '',
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+  );
+
+  // Rate limiting: 30 requests per 5 minutes per IP (prevent brute force)
+  const clientIp = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+  const rateLimitKey = `verify:${clientIp}`;
+  const rateLimit = await checkRateLimit(supabase, rateLimitKey, 30, 5);
+  
+  if (!rateLimit.allowed) {
+    // Add delay to slow down brute force attempts
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    return new Response(
+      JSON.stringify({ 
+        valid: false,
+        reason: 'RATE_LIMIT',
+        message: 'Too many verification attempts. Please try again later.'
+      }),
+      { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
   }
 
   try {
@@ -28,11 +86,6 @@ serve(async (req) => {
         }
       );
     }
-
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_PUBLISHABLE_KEY') ?? ''
-    );
 
     // Get ticket with related order and event
     const { data: ticket, error: ticketError } = await supabase
@@ -132,12 +185,15 @@ serve(async (req) => {
       }
     );
   } catch (error) {
-    console.error('Error verifying ticket:', error);
+    console.error('Ticket verification error:', {
+      message: (error as Error).message,
+      stack: (error as Error).stack,
+    });
     return new Response(
       JSON.stringify({
         valid: false,
         reason: 'ERROR',
-        error: (error as Error).message,
+        message: 'Unable to verify ticket. Please try again.',
       }),
       {
         status: 500,
