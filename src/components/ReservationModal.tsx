@@ -193,10 +193,10 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
                   92250 La Garenne-Colombes, France
                 </p>
                 <a 
-                  href="https://www.google.com/maps/search/?api=1&query=8+Place+de+la+Gare+des+Vallées,+92250+La+Garenne-Colombes,+France"
+                  href="https://maps.google.com/?q=8+Place+de+la+Gare+des+Vallées,92250+La+Garenne-Colombes,France"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary text-sm underline mt-1 inline-block"
+                  className="text-primary text-sm underline mt-1 inline-block hover:text-primary/80 transition-colors"
                 >
                   📍 Voir sur Google Maps
                 </a>
@@ -214,7 +214,7 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
                 loading="lazy"
                 allowFullScreen
                 referrerPolicy="no-referrer-when-downgrade"
-                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=8+Place+de+la+Gare+des+Vallées,92250+La+Garenne-Colombes,France&zoom=15"
+                src="https://maps.google.com/maps?q=8+Place+de+la+Gare+des+Vallées,92250+La+Garenne-Colombes,France&output=embed"
               />
             </div>
           </div>
