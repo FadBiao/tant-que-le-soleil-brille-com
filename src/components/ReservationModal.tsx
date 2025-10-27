@@ -171,7 +171,7 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-playfair text-2xl flex items-center gap-2">
             <Ticket className="h-6 w-6 text-primary" />
@@ -183,25 +183,39 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
         </DialogHeader>
 
         <div className="mb-4 p-4 bg-gradient-dawn rounded-lg border-l-4 border-primary">
-          <div className="flex items-start gap-3">
-            <Calendar className="h-5 w-5 text-primary mt-0.5" />
-            <div className="flex-1">
-              <h4 className="font-poppins font-semibold text-sm mb-1">Lieu de l'Atelier</h4>
-              <p className="font-poppins text-sm text-muted-foreground">
-                8 Place de la Gare des Vallées<br />
-                92250 La Garenne-Colombes, France
-              </p>
-              <a 
-                href="https://www.google.com/maps/search/?api=1&query=8+Place+de+la+Gare+des+Vallées,+92250+La+Garenne-Colombes,+France"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary text-sm underline mt-1 inline-block"
-              >
-                📍 Voir sur Google Maps
-              </a>
-              <p className="font-poppins text-sm font-semibold text-primary mt-2">
-                Tarif: 25€ par personne
-              </p>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-start gap-3">
+              <Calendar className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+              <div className="flex-1">
+                <h4 className="font-poppins font-semibold text-sm mb-1">Lieu de l'Atelier</h4>
+                <p className="font-poppins text-sm text-muted-foreground">
+                  8 Place de la Gare des Vallées<br />
+                  92250 La Garenne-Colombes, France
+                </p>
+                <a 
+                  href="https://www.google.com/maps/search/?api=1&query=8+Place+de+la+Gare+des+Vallées,+92250+La+Garenne-Colombes,+France"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary text-sm underline mt-1 inline-block"
+                >
+                  📍 Voir sur Google Maps
+                </a>
+                <p className="font-poppins text-sm font-semibold text-primary mt-2">
+                  Tarif: 25€ par personne
+                </p>
+              </div>
+            </div>
+            
+            <div className="w-full h-[200px] rounded-lg overflow-hidden border-2 border-primary/20">
+              <iframe
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=8+Place+de+la+Gare+des+Vallées,92250+La+Garenne-Colombes,France&zoom=15"
+              />
             </div>
           </div>
         </div>
@@ -294,16 +308,32 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     >
                       <option value="">-- Sélectionner une séance --</option>
-                      {sessions.map((session) => {
-                        const available = session.capacity - session.booked_count;
-                        const disabled = available <= 0;
-                        return (
-                          <option key={session.id} value={session.id} disabled={disabled}>
-                            {session.session_name} ({session.start_time.slice(0, 5)} - {session.end_time.slice(0, 5)})
-                            {disabled ? ' - COMPLET' : ` - ${available} places restantes`}
+                      {sessions
+                        .filter((session) => {
+                          const available = session.capacity - session.booked_count;
+                          return available > 0;
+                        })
+                        .map((session) => {
+                          const available = session.capacity - session.booked_count;
+                          return (
+                            <option key={session.id} value={session.id}>
+                              {session.session_name} ({session.start_time.slice(0, 5)} - {session.end_time.slice(0, 5)}) - {available} place{available > 1 ? 's' : ''} restante{available > 1 ? 's' : ''}
+                            </option>
+                          );
+                        })}
+                      {sessions.filter(s => s.capacity - s.booked_count <= 0).length > 0 && (
+                        <option disabled>─── Séances complètes ───</option>
+                      )}
+                      {sessions
+                        .filter((session) => {
+                          const available = session.capacity - session.booked_count;
+                          return available <= 0;
+                        })
+                        .map((session) => (
+                          <option key={session.id} value={session.id} disabled>
+                            {session.session_name} ({session.start_time.slice(0, 5)} - {session.end_time.slice(0, 5)}) - COMPLET
                           </option>
-                        );
-                      })}
+                        ))}
                     </select>
                   </FormControl>
                   <FormMessage />
