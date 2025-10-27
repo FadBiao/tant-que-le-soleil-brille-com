@@ -16,13 +16,13 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-md z-50 border-b border-border">
+    <nav className="fixed top-0 w-full bg-[hsl(var(--navbar-bg))] z-50 border-b border-white/20">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <a href="#accueil" className="flex items-center gap-2 group">
             <img src={logo} alt="Tant que le Soleil Brille" className="h-10 w-10 animate-glow-pulse" />
-            <span className="font-playfair text-2xl font-bold text-foreground">
+            <span className="font-playfair text-2xl font-bold text-white">
               Tant que le Soleil Brille
             </span>
           </a>
@@ -33,19 +33,19 @@ const Navbar = () => {
               <a
                 key={link.name}
                 href={link.href}
-                className="font-poppins text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                className="font-poppins text-sm font-medium text-white/90 hover:text-white transition-colors"
               >
                 {link.name}
               </a>
             ))}
-            <Button variant="default" className="bg-gradient-sun shadow-glow">
+            <Button variant="default" className="bg-white text-[hsl(var(--navbar-bg))] hover:bg-white/90">
               Rejoindre la communauté
             </Button>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-foreground"
+            className="md:hidden text-white"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
           >
@@ -61,13 +61,13 @@ const Navbar = () => {
                 <a
                   key={link.name}
                   href={link.href}
-                  className="font-poppins text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2"
+                  className="font-poppins text-sm font-medium text-white/90 hover:text-white transition-colors py-2"
                   onClick={() => setIsOpen(false)}
                 >
                   {link.name}
                 </a>
               ))}
-              <Button variant="default" className="bg-gradient-sun shadow-glow w-full">
+              <Button variant="default" className="bg-white text-[hsl(var(--navbar-bg))] hover:bg-white/90 w-full">
                 Rejoindre la communauté
               </Button>
             </div>

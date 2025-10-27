@@ -53,6 +53,9 @@ All colors MUST be HSL.
     --shadow-glow: 0 8px 32px hsl(43 96% 56% / 0.25);
     --shadow-soft: 0 4px 20px hsl(28 30% 25% / 0.08);
 
+    /* Navbar color */
+    --navbar-bg: 20 100% 47%;
+
     /* Transitions douces */
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
