@@ -3,24 +3,61 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mail, Send, Sun } from "lucide-react";
-import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+const contactSchema = z.object({
+  name: z.string()
+    .trim()
+    .min(2, "Le nom doit contenir au moins 2 caractères")
+    .max(100, "Le nom ne peut pas dépasser 100 caractères"),
+  email: z.string()
+    .trim()
+    .email("Adresse email invalide")
+    .max(255, "L'email ne peut pas dépasser 255 caractères"),
+  message: z.string()
+    .trim()
+    .min(10, "Le message doit contenir au moins 10 caractères")
+    .max(2000, "Le message ne peut pas dépasser 2000 caractères")
+});
+
+type ContactFormValues = z.infer<typeof contactSchema>;
 
 const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: ""
-  });
   const { toast } = useToast();
+  
+  const form = useForm<ContactFormValues>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      message: ""
+    }
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = (data: ContactFormValues) => {
+    console.log("Form submitted with validated data:", { 
+      nameLength: data.name.length,
+      emailLength: data.email.length,
+      messageLength: data.message.length 
+    });
+    
     toast({
       title: "Message envoyé ! ☀️",
       description: "Merci pour votre message. Nous vous répondrons bientôt.",
     });
-    setFormData({ name: "", email: "", message: "" });
+    
+    form.reset();
   };
 
   return (
@@ -38,60 +75,80 @@ const Contact = () => {
 
         <Card className="shadow-soft animate-fade-in">
           <CardContent className="p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="font-poppins text-sm font-medium text-foreground mb-2 block">
-                    Votre Nom
-                  </label>
-                  <Input 
-                    type="text"
-                    placeholder="Marie Dupont"
-                    value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    required
-                    className="font-poppins"
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-poppins">Votre Nom</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Marie Dupont"
+                            maxLength={100}
+                            className="font-poppins"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-poppins">Votre Email</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="email"
+                            placeholder="marie@exemple.com"
+                            maxLength={255}
+                            className="font-poppins"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </div>
 
-                <div>
-                  <label className="font-poppins text-sm font-medium text-foreground mb-2 block">
-                    Votre Email
-                  </label>
-                  <Input 
-                    type="email"
-                    placeholder="marie@exemple.com"
-                    value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    required
-                    className="font-poppins"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="font-poppins text-sm font-medium text-foreground mb-2 block">
-                  Votre Message
-                </label>
-                <Textarea 
-                  placeholder="Partagez votre lumière avec nous..."
-                  rows={6}
-                  value={formData.message}
-                  onChange={(e) => setFormData({...formData, message: e.target.value})}
-                  required
-                  className="font-poppins resize-none"
+                <FormField
+                  control={form.control}
+                  name="message"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-poppins">Votre Message</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Partagez votre lumière avec nous..."
+                          rows={6}
+                          maxLength={2000}
+                          className="font-poppins resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
 
-              <Button 
-                type="submit" 
-                size="lg" 
-                className="w-full bg-gradient-sun shadow-glow"
-              >
-                <Send className="mr-2 h-5 w-5" />
-                Envoyer un Rayon de Soleil
-              </Button>
-            </form>
+                <Button 
+                  type="submit" 
+                  size="lg" 
+                  className="w-full bg-gradient-sun shadow-glow"
+                  disabled={form.formState.isSubmitting}
+                >
+                  <Send className="mr-2 h-5 w-5" />
+                  Envoyer un Rayon de Soleil
+                </Button>
+              </form>
+            </Form>
 
             <div className="mt-8 pt-8 border-t border-border text-center">
               <div className="inline-flex items-center gap-2 text-muted-foreground">
