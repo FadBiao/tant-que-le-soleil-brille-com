@@ -85,12 +85,21 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
       );
 
       if (sessionError || !sessionData) {
+        console.error('Session creation error:', sessionError);
         throw new Error(sessionError?.message || 'Erreur lors de la création de la session');
       }
 
+      console.log('Checkout session response:', sessionData);
+
       // Redirect to Stripe Checkout
       if (sessionData.url) {
-        window.location.href = sessionData.url;
+        console.log('Redirecting to Stripe:', sessionData.url);
+        // Close the modal before redirecting
+        onOpenChange(false);
+        // Use a small delay to ensure the modal closes
+        setTimeout(() => {
+          window.location.assign(sessionData.url);
+        }, 100);
       } else {
         throw new Error('URL de paiement non disponible');
       }
