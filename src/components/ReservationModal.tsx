@@ -28,7 +28,7 @@ const reservationSchema = z.object({
   firstName: z.string().min(2, "Le prénom doit contenir au moins 2 caractères").max(100),
   name: z.string().min(2, "Le nom doit contenir au moins 2 caractères").max(100),
   email: z.string().email("Email invalide").max(255),
-  phone: z.string().min(10, "Numéro de téléphone invalide").optional(),
+  phone: z.preprocess((v) => (typeof v === 'string' && v.trim() === '' ? undefined : v), z.string().min(10, "Numéro de téléphone invalide")).optional(),
   sessionId: z.string().min(1, "Veuillez choisir une séance"),
   quantity: z.number().min(1, "Minimum 1 place").max(30, "Maximum 30 places"),
 });
@@ -171,7 +171,7 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[860px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-playfair text-2xl flex items-center gap-2">
             <Ticket className="h-6 w-6 text-primary" />
@@ -192,31 +192,12 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
                   8 Place de la Gare des Vallées<br />
                   92250 La Garenne-Colombes, France
                 </p>
-                <a 
-                  href="https://maps.google.com/?q=8+Place+de+la+Gare+des+Vallées,92250+La+Garenne-Colombes,France"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary text-sm underline mt-1 inline-block hover:text-primary/80 transition-colors"
-                >
-                  📍 Voir sur Google Maps
-                </a>
                 <p className="font-poppins text-sm font-semibold text-primary mt-2">
                   Tarif: 25€ par personne
                 </p>
               </div>
             </div>
             
-            <div className="w-full h-[200px] rounded-lg overflow-hidden border-2 border-primary/20">
-              <iframe
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                loading="lazy"
-                allowFullScreen
-                referrerPolicy="no-referrer-when-downgrade"
-                src="https://maps.google.com/maps?q=8+Place+de+la+Gare+des+Vallées,92250+La+Garenne-Colombes,France&output=embed"
-              />
-            </div>
           </div>
         </div>
 
