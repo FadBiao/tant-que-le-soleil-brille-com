@@ -35,6 +35,50 @@ export type Database = {
         }
         Relationships: []
       }
+      event_sessions: {
+        Row: {
+          booked_count: number
+          capacity: number
+          created_at: string
+          end_time: string
+          event_id: string
+          id: string
+          session_name: string
+          start_time: string
+          updated_at: string
+        }
+        Insert: {
+          booked_count?: number
+          capacity?: number
+          created_at?: string
+          end_time: string
+          event_id: string
+          id?: string
+          session_name: string
+          start_time: string
+          updated_at?: string
+        }
+        Update: {
+          booked_count?: number
+          capacity?: number
+          created_at?: string
+          end_time?: string
+          event_id?: string
+          id?: string
+          session_name?: string
+          start_time?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_sessions_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       events: {
         Row: {
           capacity: number | null
@@ -80,11 +124,14 @@ export type Database = {
           created_at: string
           event_id: string
           id: string
+          quantity: number
+          session_id: string | null
           status: string
           stripe_payment_intent_id: string | null
           stripe_session_id: string | null
           updated_at: string
           user_email: string
+          user_first_name: string | null
           user_name: string
           user_phone: string | null
         }
@@ -93,11 +140,14 @@ export type Database = {
           created_at?: string
           event_id: string
           id?: string
+          quantity?: number
+          session_id?: string | null
           status?: string
           stripe_payment_intent_id?: string | null
           stripe_session_id?: string | null
           updated_at?: string
           user_email: string
+          user_first_name?: string | null
           user_name: string
           user_phone?: string | null
         }
@@ -106,11 +156,14 @@ export type Database = {
           created_at?: string
           event_id?: string
           id?: string
+          quantity?: number
+          session_id?: string | null
           status?: string
           stripe_payment_intent_id?: string | null
           stripe_session_id?: string | null
           updated_at?: string
           user_email?: string
+          user_first_name?: string | null
           user_name?: string
           user_phone?: string | null
         }
@@ -120,6 +173,13 @@ export type Database = {
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "event_sessions"
             referencedColumns: ["id"]
           },
         ]
@@ -154,30 +214,36 @@ export type Database = {
       tickets: {
         Row: {
           attendee_email: string
+          attendee_first_name: string | null
           attendee_name: string
           created_at: string
           event_id: string
           id: string
           order_id: string
           qr_token: string
+          session_id: string | null
         }
         Insert: {
           attendee_email: string
+          attendee_first_name?: string | null
           attendee_name: string
           created_at?: string
           event_id: string
           id?: string
           order_id: string
           qr_token: string
+          session_id?: string | null
         }
         Update: {
           attendee_email?: string
+          attendee_first_name?: string | null
           attendee_name?: string
           created_at?: string
           event_id?: string
           id?: string
           order_id?: string
           qr_token?: string
+          session_id?: string | null
         }
         Relationships: [
           {
@@ -194,6 +260,13 @@ export type Database = {
             referencedRelation: "orders"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "tickets_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "event_sessions"
+            referencedColumns: ["id"]
+          },
         ]
       }
     }
@@ -201,6 +274,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      decrement_session_capacity: {
+        Args: { p_quantity: number; p_session_id: string }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

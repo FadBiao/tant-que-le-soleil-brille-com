@@ -77,10 +77,14 @@ serve(async (req) => {
     // Validate input with Zod
     const checkoutSchema = z.object({
       eventId: z.string().uuid('Invalid event ID'),
+      sessionId: z.string().uuid('Invalid session ID'),
+      firstName: z.string().trim().min(2, 'First name must be at least 2 characters').max(100, 'First name must be less than 100 characters')
+        .regex(/^[a-zA-ZÀ-ÿ\s'-]+$/, 'First name contains invalid characters'),
       name: z.string().trim().min(2, 'Name must be at least 2 characters').max(100, 'Name must be less than 100 characters')
         .regex(/^[a-zA-ZÀ-ÿ\s'-]+$/, 'Name contains invalid characters'),
       email: z.string().trim().email('Invalid email address').max(255, 'Email must be less than 255 characters'),
-      phone: z.string().trim().regex(/^\+?[0-9\s-]{8,20}$/, 'Invalid phone number').optional().or(z.literal(''))
+      phone: z.string().trim().regex(/^\+?[0-9\s-]{8,20}$/, 'Invalid phone number').optional().or(z.literal('')),
+      quantity: z.number().int().min(1).max(30)
     });
 
     const body = await req.json();
@@ -98,7 +102,7 @@ serve(async (req) => {
       );
     }
 
-    const { eventId, name, email, phone } = validationResult.data;
+    const { eventId, sessionId, firstName, name, email, phone, quantity } = validationResult.data;
 
     // Get event details
     const { data: event, error: eventError } = await supabase
@@ -118,15 +122,49 @@ serve(async (req) => {
       );
     }
 
+    // Get session details and check availability
+    const { data: session, error: sessionError } = await supabase
+      .from('event_sessions')
+      .select('*')
+      .eq('id', sessionId)
+      .eq('event_id', eventId)
+      .single();
+
+    if (sessionError || !session) {
+      console.error('Session lookup error:', sessionError);
+      return new Response(
+        JSON.stringify({ 
+          error: 'The requested session could not be found.',
+          code: 'SESSION_NOT_FOUND'
+        }),
+        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Check if enough places are available
+    const availablePlaces = session.capacity - session.booked_count;
+    if (availablePlaces < quantity) {
+      return new Response(
+        JSON.stringify({ 
+          error: `Only ${availablePlaces} places available for this session.`,
+          code: 'INSUFFICIENT_CAPACITY'
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Create order in database
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .insert({
         event_id: eventId,
+        session_id: sessionId,
         user_email: email,
+        user_first_name: firstName,
         user_name: name,
         user_phone: phone,
-        amount_cents: event.price_cents,
+        quantity: quantity,
+        amount_cents: event.price_cents * quantity,
         status: 'pending',
       })
       .select()
@@ -144,19 +182,19 @@ serve(async (req) => {
     }
 
     // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
+    const stripeSession = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
         {
           price_data: {
             currency: 'eur',
             product_data: {
-              name: event.name,
+              name: `${event.name} - ${session.session_name}`,
               description: event.description || '',
             },
             unit_amount: event.price_cents,
           },
-          quantity: 1,
+          quantity: quantity,
         },
       ],
       mode: 'payment',
@@ -166,19 +204,20 @@ serve(async (req) => {
       metadata: {
         order_id: order.id,
         event_id: eventId,
+        session_id: sessionId,
       },
     });
 
     // Update order with Stripe session ID
     await supabase
       .from('orders')
-      .update({ stripe_session_id: session.id })
+      .update({ stripe_session_id: stripeSession.id })
       .eq('id', order.id);
 
-    console.log('Checkout session created:', session.id);
+    console.log('Checkout session created:', stripeSession.id);
 
     return new Response(
-      JSON.stringify({ sessionId: session.id, url: session.url }),
+      JSON.stringify({ sessionId: stripeSession.id, url: stripeSession.url }),
       {
         status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

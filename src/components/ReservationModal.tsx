@@ -1,4 +1,5 @@
 import { useState } from "react";
+import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -24,9 +25,12 @@ import { toast } from "@/hooks/use-toast";
 import { Calendar, Mail, User, Ticket } from "lucide-react";
 
 const reservationSchema = z.object({
+  firstName: z.string().min(2, "Le prénom doit contenir au moins 2 caractères").max(100),
   name: z.string().min(2, "Le nom doit contenir au moins 2 caractères").max(100),
   email: z.string().email("Email invalide").max(255),
   phone: z.string().min(10, "Numéro de téléphone invalide").optional(),
+  sessionId: z.string().min(1, "Veuillez choisir une séance"),
+  quantity: z.number().min(1, "Minimum 1 place").max(30, "Maximum 30 places"),
 });
 
 type ReservationFormValues = z.infer<typeof reservationSchema>;
@@ -38,15 +42,58 @@ interface ReservationModalProps {
 
 export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [sessions, setSessions] = useState<any[]>([]);
+  const [selectedSession, setSelectedSession] = useState<any>(null);
 
   const form = useForm<ReservationFormValues>({
     resolver: zodResolver(reservationSchema),
     defaultValues: {
+      firstName: "",
       name: "",
       email: "",
       phone: "",
+      sessionId: "",
+      quantity: 1,
     },
   });
+
+  // Load sessions when modal opens
+  React.useEffect(() => {
+    if (open) {
+      loadSessions();
+    }
+  }, [open]);
+
+  const loadSessions = async () => {
+    try {
+      const { data: events, error: eventsError } = await supabase
+        .from('events')
+        .select('*, event_sessions(*)')
+        .eq('status', 'active')
+        .order('event_date', { ascending: true })
+        .limit(1);
+
+      if (eventsError) throw eventsError;
+      if (!events || events.length === 0) {
+        toast({
+          title: "Aucun événement disponible",
+          description: "Il n'y a pas d'événement actif pour le moment.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const event = events[0];
+      setSessions(event.event_sessions || []);
+    } catch (error) {
+      console.error('Error loading sessions:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de charger les séances disponibles.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const onSubmit = async (data: ReservationFormValues) => {
     setIsSubmitting(true);
@@ -77,9 +124,12 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
         {
           body: {
             eventId: event.id,
+            sessionId: data.sessionId,
+            firstName: data.firstName,
             name: data.name,
             email: data.email,
             phone: data.phone,
+            quantity: data.quantity,
           },
         }
       );
@@ -135,13 +185,22 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
         <div className="mb-4 p-4 bg-gradient-dawn rounded-lg border-l-4 border-primary">
           <div className="flex items-start gap-3">
             <Calendar className="h-5 w-5 text-primary mt-0.5" />
-            <div>
-              <h4 className="font-poppins font-semibold text-sm mb-1">Prochaine Session</h4>
+            <div className="flex-1">
+              <h4 className="font-poppins font-semibold text-sm mb-1">Lieu de l'Atelier</h4>
               <p className="font-poppins text-sm text-muted-foreground">
-                Date à confirmer • Atelier d'écriture créative
+                8 Place de la Gare des Vallées<br />
+                92250 La Garenne-Colombes, France
               </p>
-              <p className="font-poppins text-sm font-semibold text-primary mt-1">
-                Tarif: 25€
+              <a 
+                href="https://www.google.com/maps/search/?api=1&query=8+Place+de+la+Gare+des+Vallées,+92250+La+Garenne-Colombes,+France"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary text-sm underline mt-1 inline-block"
+              >
+                📍 Voir sur Google Maps
+              </a>
+              <p className="font-poppins text-sm font-semibold text-primary mt-2">
+                Tarif: 25€ par personne
               </p>
             </div>
           </div>
@@ -149,22 +208,41 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    Nom complet
-                  </FormLabel>
-                  <FormControl>
-                    <Input placeholder="Votre nom" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      Prénom
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="Votre prénom" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      Nom
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="Votre nom" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
@@ -196,6 +274,75 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="sessionId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Choisir une séance</FormLabel>
+                  <FormControl>
+                    <select
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        const session = sessions.find(s => s.id === e.target.value);
+                        setSelectedSession(session);
+                        // Reset quantity when changing session
+                        form.setValue('quantity', 1);
+                      }}
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    >
+                      <option value="">-- Sélectionner une séance --</option>
+                      {sessions.map((session) => {
+                        const available = session.capacity - session.booked_count;
+                        const disabled = available <= 0;
+                        return (
+                          <option key={session.id} value={session.id} disabled={disabled}>
+                            {session.session_name} ({session.start_time.slice(0, 5)} - {session.end_time.slice(0, 5)})
+                            {disabled ? ' - COMPLET' : ` - ${available} places restantes`}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {selectedSession && (
+              <>
+                <FormField
+                  control={form.control}
+                  name="quantity"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nombre de places</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min={1}
+                          max={Math.min(30, selectedSession.capacity - selectedSession.booked_count)}
+                          {...field}
+                          onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
+                        />
+                      </FormControl>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Il reste {selectedSession.capacity - selectedSession.booked_count} places disponibles pour cette séance
+                      </p>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="p-3 bg-muted rounded-md">
+                  <p className="text-sm font-semibold">
+                    Total: {form.watch('quantity') * 25}€
+                  </p>
+                </div>
+              </>
+            )}
 
             <Button
               type="submit"

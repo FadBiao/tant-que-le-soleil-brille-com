@@ -91,7 +91,7 @@ serve(async (req) => {
           stripe_payment_intent_id: session.payment_intent as string,
         })
         .eq('id', orderId)
-        .select('*, events(*)')
+        .select('*, events(*), event_sessions(*)')
         .single();
 
       if (orderError || !order) {
@@ -108,23 +108,42 @@ serve(async (req) => {
         );
       }
 
-      // Generate QR token
-      const qrToken = generateQRToken();
+      // Decrement session capacity
+      if (order.session_id) {
+        const { error: decrementError } = await supabase.rpc(
+          'decrement_session_capacity',
+          {
+            p_session_id: order.session_id,
+            p_quantity: order.quantity || 1,
+          }
+        );
 
-      // Create ticket
-      const { data: ticket, error: ticketError } = await supabase
-        .from('tickets')
-        .insert({
+        if (decrementError) {
+          console.error('Failed to decrement session capacity:', decrementError);
+        }
+      }
+
+      // Create tickets (one for each quantity)
+      const tickets = [];
+      for (let i = 0; i < (order.quantity || 1); i++) {
+        const qrToken = generateQRToken();
+        tickets.push({
           qr_token: qrToken,
           order_id: orderId,
           event_id: order.event_id,
+          session_id: order.session_id,
           attendee_name: order.user_name,
+          attendee_first_name: order.user_first_name,
           attendee_email: order.user_email,
-        })
-        .select()
-        .single();
+        });
+      }
 
-      if (ticketError || !ticket) {
+      const { data: createdTickets, error: ticketError } = await supabase
+        .from('tickets')
+        .insert(tickets)
+        .select();
+
+      if (ticketError || !createdTickets || createdTickets.length === 0) {
         console.error('Ticket creation failed:', ticketError);
         return new Response(
           JSON.stringify({ 
@@ -138,9 +157,19 @@ serve(async (req) => {
         );
       }
 
+      // Use first ticket for QR code
+      const mainTicket = createdTickets[0];
+
       // Generate QR code URL
-      const qrUrl = `https://tant-que-le-soleil-brille-com.lovable.app/ticket/verify?t=${qrToken}`;
+      const qrUrl = `https://tant-que-le-soleil-brille-com.lovable.app/ticket/verify?t=${mainTicket.qr_token}`;
       const qrImageUrl = generateQRCodeSVG(qrUrl);
+
+      // Get session details
+      const sessionDetails = order.event_sessions;
+      const sessionName = sessionDetails?.session_name || 'Séance non spécifiée';
+      const sessionTime = sessionDetails 
+        ? `${sessionDetails.start_time.slice(0, 5)} - ${sessionDetails.end_time.slice(0, 5)}`
+        : '';
 
       // Format event date
       const eventDate = new Date(order.events.event_date);
@@ -149,8 +178,6 @@ serve(async (req) => {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
       });
 
       // Send confirmation email with QR code
@@ -166,28 +193,29 @@ serve(async (req) => {
               .qr-code { text-align: center; margin: 30px 0; }
               .qr-code img { max-width: 256px; border: 2px solid #FDB022; border-radius: 10px; }
               .button { display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #FDB022 0%, #FF8A3D 100%); color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-              .details { background: white; padding: 20px; border-radius: 5px; margin: 20px 0; }
-              .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; }
+              .details { background: white; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #FDB022; }
+              .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; padding: 20px; background: #f9f9f9; border-radius: 5px; }
+              .important { background: #FFF8E1; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #FDB022; }
             </style>
           </head>
           <body>
             <div class="container">
               <div class="header">
-                <h1>☀️ Soleil sur toi !</h1>
-                <h2>Ta place est confirmée</h2>
+                <h1>☀️ Bonjour ${order.user_first_name || order.user_name} !</h1>
+                <h2>Votre place est bien confirmée !</h2>
               </div>
               <div class="content">
-                <p>Bonjour ${order.user_name},</p>
-                <p>Nous sommes ravis de confirmer ta réservation pour :</p>
+                <p>Merci pour votre réservation au Club d'Écriture "Tant que le Soleil Brille" 🌞</p>
                 
                 <div class="details">
-                  <h3>${order.events.name}</h3>
+                  <h3>🗓️ Séance choisie : ${sessionName}</h3>
+                  <p><strong>👥 Nombre de places réservées :</strong> ${order.quantity || 1}</p>
+                  <p><strong>📍 Lieu :</strong> 8 Place de la Gare des Vallées<br/>92250 La Garenne-Colombes</p>
+                  <p><strong>🕑 Heure :</strong> ${sessionTime}</p>
                   <p><strong>📅 Date :</strong> ${formattedDate}</p>
-                  <p><strong>📍 Lieu :</strong> ${order.events.location}</p>
-                  <p><strong>💰 Montant payé :</strong> ${(order.amount_cents / 100).toFixed(2)} €</p>
                 </div>
 
-                <p><strong>Voici ton billet avec QR Code :</strong></p>
+                <p><strong>Voici votre ticket de réservation avec QR Code :</strong></p>
                 
                 <div class="qr-code">
                   <img src="${qrImageUrl}" alt="QR Code" />
@@ -197,15 +225,27 @@ serve(async (req) => {
                   <a href="${qrUrl}" class="button">Voir ma confirmation</a>
                 </p>
 
-                <p><strong>Le jour J :</strong> Présente simplement ce QR code (sur ton téléphone ou imprimé) à l'entrée. L'organisatrice le scannera pour confirmer ta présence.</p>
+                <div class="important">
+                  <p><strong>⚠️ Informations importantes :</strong></p>
+                  <ul>
+                    <li>Vous trouverez ci-joint votre ticket de réservation à présenter le jour de l'événement (version imprimée ou numérique acceptée).</li>
+                    <li>Un QR code est inclus pour validation à l'entrée.</li>
+                    <li>Merci d'apporter ce ticket le jour de la séance.</li>
+                    <li>Ce billet est nominatif et non remboursable après validation.</li>
+                  </ul>
+                </div>
 
-                <p>Nous avons hâte de te voir briller avec nous ! ✨</p>
+                <p style="text-align: center; font-size: 18px; color: #FDB022; margin: 30px 0;">
+                  "Tant que le Soleil Brille" ☀️<br/>
+                  <em>Un instant d'écriture et de partage.</em>
+                </p>
                 
-                <p>Soleil sur toi,<br>L'équipe Tant que le Soleil Brille</p>
+                <p>Pour toutes infos complémentaires, contactez-nous à l'adresse :<br/>
+                <a href="mailto:tantquelesoleilbrille@gmail.com" style="color: #FDB022;">tantquelesoleilbrille@gmail.com</a></p>
               </div>
               
               <div class="footer">
-                <p>Si tu as des questions, réponds simplement à cet email.</p>
+                <p>Nous avons hâte de vous retrouver !</p>
                 <p>© ${new Date().getFullYear()} Tant que le Soleil Brille</p>
               </div>
             </div>
@@ -214,29 +254,38 @@ serve(async (req) => {
       `;
 
       const emailText = `
-Soleil sur toi, ${order.user_name} !
+Bonjour ${order.user_first_name || order.user_name},
 
-Ta réservation est confirmée pour :
+Merci pour votre réservation au Club d'Écriture "Tant que le Soleil Brille" 🌞
+Votre place est bien confirmée !
 
-${order.events.name}
-📅 ${formattedDate}
-📍 ${order.events.location}
-💰 ${(order.amount_cents / 100).toFixed(2)} €
+🗓️ Séance choisie : ${sessionName}
+👥 Nombre de places réservées : ${order.quantity || 1}
+📍 Lieu : 8 Place de la Gare des Vallées, 92250 La Garenne-Colombes
+🕑 Heure : ${sessionTime}
+📅 Date : ${formattedDate}
 
-Ton QR Code : ${qrUrl}
+Votre QR Code : ${qrUrl}
 
-Le jour J, présente ce QR code à l'entrée.
+⚠️ INFORMATIONS IMPORTANTES :
+- Vous trouverez ci-joint votre ticket de réservation à présenter le jour de l'événement (version imprimée ou numérique acceptée).
+- Un QR code est inclus pour validation à l'entrée.
+- Merci d'apporter ce ticket le jour de la séance.
+- Ce billet est nominatif et non remboursable après validation.
 
-Nous avons hâte de te voir briller avec nous ! ✨
+"Tant que le Soleil Brille" ☀️ – Un instant d'écriture et de partage.
 
-Soleil sur toi,
+Pour toutes infos complémentaires, contactez-nous à l'adresse : tantquelesoleilbrille@gmail.com
+
+Nous avons hâte de vous retrouver !
+
 L'équipe Tant que le Soleil Brille
       `;
 
       const { error: emailError } = await resend.emails.send({
         from: 'Tant que le Soleil Brille <onboarding@resend.dev>',
         to: [order.user_email],
-        subject: `🎟️ Ta réservation - ${order.events.name}`,
+        subject: `🎟️ Confirmation de réservation - ${sessionName}`,
         html: emailHtml,
         text: emailText,
       });
