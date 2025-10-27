@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from 'https://esm.sh/stripe@14.21.0?target=deno';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -73,17 +74,31 @@ serve(async (req) => {
       apiVersion: '2023-10-16',
     });
 
-    const { eventId, name, email, phone } = await req.json();
+    // Validate input with Zod
+    const checkoutSchema = z.object({
+      eventId: z.string().uuid('Invalid event ID'),
+      name: z.string().trim().min(2, 'Name must be at least 2 characters').max(100, 'Name must be less than 100 characters')
+        .regex(/^[a-zA-ZÀ-ÿ\s'-]+$/, 'Name contains invalid characters'),
+      email: z.string().trim().email('Invalid email address').max(255, 'Email must be less than 255 characters'),
+      phone: z.string().trim().regex(/^\+?[0-9\s-]{8,20}$/, 'Invalid phone number').optional().or(z.literal(''))
+    });
 
-    if (!eventId || !name || !email) {
+    const body = await req.json();
+    const validationResult = checkoutSchema.safeParse(body);
+    
+    if (!validationResult.success) {
+      console.log('Validation error:', validationResult.error.issues);
       return new Response(
         JSON.stringify({ 
-          error: 'Missing required information. Please fill in all fields.',
-          code: 'MISSING_FIELDS'
+          error: 'Invalid input data. Please check your information.',
+          code: 'INVALID_INPUT',
+          details: validationResult.error.issues[0]?.message
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    const { eventId, name, email, phone } = validationResult.data;
 
     // Get event details
     const { data: event, error: eventError } = await supabase

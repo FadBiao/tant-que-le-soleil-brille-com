@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -74,6 +75,12 @@ serve(async (req) => {
     const token = url.searchParams.get('t');
     const eventId = url.searchParams.get('event');
 
+    // Validate token with Zod
+    const tokenSchema = z.string().trim()
+      .min(10, 'Token too short')
+      .max(100, 'Token too long')
+      .regex(/^[A-Za-z0-9_-]+$/, 'Invalid token format');
+
     if (!token) {
       return new Response(
         JSON.stringify({
@@ -85,6 +92,40 @@ serve(async (req) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
+    }
+
+    const tokenValidation = tokenSchema.safeParse(token);
+    if (!tokenValidation.success) {
+      console.log('Token validation failed:', tokenValidation.error.issues);
+      return new Response(
+        JSON.stringify({
+          valid: false,
+          reason: 'INVALID_TOKEN',
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Validate eventId if provided
+    if (eventId) {
+      const eventIdSchema = z.string().uuid();
+      const eventIdValidation = eventIdSchema.safeParse(eventId);
+      if (!eventIdValidation.success) {
+        console.log('Event ID validation failed');
+        return new Response(
+          JSON.stringify({
+            valid: false,
+            reason: 'INVALID_EVENT_ID',
+          }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
     }
 
     // Get ticket with related order and event
