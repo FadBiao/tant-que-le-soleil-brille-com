@@ -22,7 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
-import { Mail, User, Ticket } from "lucide-react";
+import { Calendar, Mail, User, Ticket } from "lucide-react";
 
 const reservationSchema = z.object({
   firstName: z.string().min(2, "Le prénom doit contenir au moins 2 caractères").max(100),
@@ -183,6 +183,25 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
             Rejoignez notre Club d'Écriture et laissez votre créativité briller ☀️
           </DialogDescription>
         </DialogHeader>
+
+        <div className="mb-4 p-4 bg-gradient-dawn rounded-lg border-l-4 border-primary">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-start gap-3">
+              <Calendar className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+              <div className="flex-1">
+                <h4 className="font-poppins font-semibold text-sm mb-1">Lieu de l'Atelier</h4>
+                <p className="font-poppins text-sm text-muted-foreground">
+                  Café Poésie, 10 Pass. Thiéré<br />
+                  75011 Paris, France
+                </p>
+                <p className="font-poppins text-sm font-semibold text-primary mt-2">
+                  Tarif: {eventPrice}€ par personne
+                </p>
+              </div>
+            </div>
+            
+          </div>
+        </div>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
