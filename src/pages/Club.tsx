@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Calendar, Users, Heart, Ticket, ArrowLeft } from "lucide-react";
+import { Calendar, Users, Heart, Ticket, ArrowLeft, ShoppingBag, Pen, BookOpen, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import clubReading from "@/assets/club-reading.jpg";
 import { ReservationModal } from "@/components/ReservationModal";
@@ -85,15 +85,27 @@ const Club = () => {
               </div>
 
               <div className="bg-card p-6 rounded-xl border border-border mt-6">
-                <p className="font-poppins text-sm font-semibold text-foreground mb-3">
+                <p className="font-poppins text-sm font-semibold text-foreground mb-4">
                   Et ce n'est pas tout... Chaque participant repartira avec :
                 </p>
-                <ul className="space-y-2 font-poppins text-sm text-muted-foreground">
-                  <li>• Un tote bag "Soleil sur toi"</li>
-                  <li>• Un stylo "Soleil sur toi"</li>
-                  <li>• Un carnet orange au papier doux</li>
-                  <li>• Et le lendemain, un email comportant des exercices d'écritures composé par Ibby pour prolonger l'expérience et poursuivre ton aventure intérieure depuis chez toi.</li>
-                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex items-start gap-3">
+                    <ShoppingBag className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <p className="font-poppins text-sm text-muted-foreground">Un tote bag "Soleil sur toi"</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Pen className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <p className="font-poppins text-sm text-muted-foreground">Un stylo "Soleil sur toi"</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <BookOpen className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <p className="font-poppins text-sm text-muted-foreground">Un carnet orange au papier doux</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Mail className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <p className="font-poppins text-sm text-muted-foreground">Le lendemain, un email avec des exercices d'écriture pour prolonger l'expérience</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
