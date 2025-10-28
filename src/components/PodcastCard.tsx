@@ -4,13 +4,31 @@ import { Play, Share2 } from "lucide-react";
 
 interface PodcastCardProps {
   title: string;
-  description: string;
   image: string;
-  quote: string;
-  theme: string;
+  spotifyUrl: string;
+  themes: string[];
 }
 
-const PodcastCard = ({ title, description, image, quote, theme }: PodcastCardProps) => {
+const PodcastCard = ({ title, image, spotifyUrl, themes }: PodcastCardProps) => {
+  const handleListen = () => {
+    window.open(spotifyUrl, '_blank');
+  };
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: title,
+          url: spotifyUrl,
+        });
+      } catch (err) {
+        console.log('Error sharing:', err);
+      }
+    } else {
+      navigator.clipboard.writeText(spotifyUrl);
+    }
+  };
+
   return (
     <Card className="overflow-hidden group hover:shadow-glow transition-all duration-300">
       <div className="relative h-48 overflow-hidden">
@@ -21,29 +39,41 @@ const PodcastCard = ({ title, description, image, quote, theme }: PodcastCardPro
         />
         <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent opacity-80"></div>
         <div className="absolute top-3 right-3 bg-primary text-primary-foreground text-xs font-poppins px-3 py-1 rounded-full">
-          {theme}
+          {themes[0]}
         </div>
       </div>
       
       <CardContent className="p-6">
-        <h3 className="font-playfair text-xl font-semibold mb-2 text-card-foreground">
+        <h3 className="font-playfair text-xl font-semibold mb-4 text-card-foreground min-h-[3.5rem]">
           {title}
         </h3>
         
-        <p className="font-poppins text-sm text-muted-foreground mb-4 line-clamp-2">
-          {description}
-        </p>
-        
-        <blockquote className="border-l-2 border-primary pl-4 mb-4 italic text-sm text-muted-foreground font-poppins">
-          "{quote}"
-        </blockquote>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {themes.map((theme, index) => (
+            <span 
+              key={index}
+              className="text-xs font-poppins px-2 py-1 rounded-full bg-primary/10 text-primary"
+            >
+              {theme}
+            </span>
+          ))}
+        </div>
 
         <div className="flex gap-2">
-          <Button variant="default" size="sm" className="flex-1 bg-gradient-sun">
+          <Button 
+            variant="default" 
+            size="sm" 
+            className="flex-1 bg-gradient-sun"
+            onClick={handleListen}
+          >
             <Play className="mr-2 h-4 w-4" />
             Écouter
           </Button>
-          <Button variant="outline" size="sm">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={handleShare}
+          >
             <Share2 className="h-4 w-4" />
           </Button>
         </div>
