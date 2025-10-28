@@ -24,7 +24,7 @@ const Hero = () => {
   return (
     <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-[72px]">
       {/* Background Carousel with Overlay */}
-      <div className="absolute inset-0">
+      <div className="absolute top-[72px] left-0 right-0 bottom-0">
         <Carousel
           opts={{ loop: true }}
           plugins={[
@@ -45,7 +45,7 @@ const Hero = () => {
             ))}
           </CarouselContent>
         </Carousel>
-        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background"></div>
+        <div className="absolute top-[72px] left-0 right-0 bottom-0 bg-gradient-to-b from-background/10 via-background/20 to-transparent pointer-events-none"></div>
       </div>
 
       {/* Content */}
