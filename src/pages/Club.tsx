@@ -6,12 +6,9 @@ import clubReading from "@/assets/club-reading.jpg";
 import { ReservationModal } from "@/components/ReservationModal";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
 const Club = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  return (
-    <div className="min-h-screen font-poppins">
+  return <div className="min-h-screen font-poppins">
       <Navbar />
       
       <section className="py-24 bg-gradient-dawn">
@@ -41,11 +38,7 @@ const Club = () => {
           <div className="grid md:grid-cols-2 gap-12 items-start mb-16">
             {/* Left Column - Image */}
             <div className="animate-fade-in">
-              <img 
-                src={clubReading}
-                alt="Le Club Soleil sur toi"
-                className="rounded-2xl shadow-soft hover:shadow-glow transition-shadow duration-300 w-full"
-              />
+              <img src={clubReading} alt="Le Club Soleil sur toi" className="rounded-2xl shadow-soft hover:shadow-glow transition-shadow duration-300 w-full" />
             </div>
 
             {/* Right Column - Ce qui t'attend */}
@@ -85,7 +78,7 @@ const Club = () => {
               </div>
 
               <div className="bg-card p-6 rounded-xl border border-border mt-6">
-                <p className="font-poppins text-sm font-semibold text-foreground mb-4">
+                <p className="font-poppins text-sm font-semibold text-foreground mb-4 text-center">
                   Et ce n'est pas tout... Chaque participant repartira avec :
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -189,11 +182,7 @@ const Club = () => {
             <p className="font-playfair text-xl italic text-primary mb-6">
               "Parfois, un mot peut tout changer."
             </p>
-            <Button 
-              size="lg" 
-              className="bg-gradient-sun shadow-glow"
-              onClick={() => setIsModalOpen(true)}
-            >
+            <Button size="lg" className="bg-gradient-sun shadow-glow" onClick={() => setIsModalOpen(true)}>
               <Ticket className="mr-2 h-5 w-5" />
               Je réserve ma place maintenant
             </Button>
@@ -232,16 +221,11 @@ const Club = () => {
             </div>
           </div>
 
-          <ReservationModal 
-            open={isModalOpen} 
-            onOpenChange={setIsModalOpen} 
-          />
+          <ReservationModal open={isModalOpen} onOpenChange={setIsModalOpen} />
         </div>
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Club;
