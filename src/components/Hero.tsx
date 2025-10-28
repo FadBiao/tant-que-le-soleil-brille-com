@@ -11,16 +11,16 @@ import heroBookItems from "@/assets/hero-book-items.jpg";
 import heroBanner from "@/assets/hero-banner.jpeg";
 const Hero = () => {
   const heroImages = [heroClubRoom, heroIbbyCollage, heroBooks, heroPodcasts, heroWalking, heroBookItems, heroBanner];
-  return <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+  return <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Carousel with Overlay */}
-      <div className="absolute inset-0">
+      <div className="absolute top-20 left-0 right-0 bottom-0">
         <Carousel opts={{
         loop: true
       }} plugins={[Autoplay({
         delay: 5000
       })]} className="h-full w-full">
           <CarouselContent className="h-full">
-            {heroImages.map((image, index) => <CarouselItem key={index} className="h-full">
+            {heroImages.map((image, index) => <CarouselItem key={index} className="min-h-[calc(100vh-5rem)]">
                 <div className="h-full w-full bg-cover bg-center" style={{
               backgroundImage: `url(${image})`,
               backgroundSize: 'cover',
