@@ -55,7 +55,7 @@ const PodcastsSection = () => {
           <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4 text-foreground">
             Le podcast Soleil sur toi
           </h2>
-          <p className="font-poppins text-lg text-muted-foreground max-w-2xl mx-auto text-center font-medium">Chaque épisode est une invitation à explorer votre lumière intérieurecultiver une vie plus épanouie.</p>
+          <p className="font-poppins text-lg text-muted-foreground max-w-2xl mx-auto text-center font-medium">Chaque épisode t'offre des mots vrais, des réflexions profondes, portés par la joie et la bonne humeur d'Ibby, pour ne jamais lâcher, tant que le Soleil brille.</p>
         </div>
 
         {/* Theme Filters */}
