@@ -22,9 +22,9 @@ const Hero = () => {
   ];
 
   return (
-    <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-[72px]">
       {/* Background Carousel with Overlay */}
-      <div className="absolute inset-0">
+      <div className="absolute top-[72px] left-0 right-0 bottom-0">
         <Carousel
           opts={{ loop: true }}
           plugins={[
@@ -36,7 +36,7 @@ const Hero = () => {
         >
           <CarouselContent className="h-full">
             {heroImages.map((image, index) => (
-              <CarouselItem key={index} className="h-screen">
+              <CarouselItem key={index} className="h-full">
                 <div 
                   className="h-full w-full bg-cover bg-center duration-1000 object-cover"
                   style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
