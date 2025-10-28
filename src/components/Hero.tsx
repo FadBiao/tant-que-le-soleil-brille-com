@@ -24,7 +24,7 @@ const Hero = () => {
   return (
     <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-[72px]">
       {/* Background Carousel with Overlay */}
-      <div className="absolute top-[72px] left-0 right-0 bottom-0">
+      <div className="absolute inset-0">
         <Carousel
           opts={{ loop: true }}
           plugins={[
