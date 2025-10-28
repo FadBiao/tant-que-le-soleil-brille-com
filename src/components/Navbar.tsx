@@ -33,7 +33,7 @@ const Navbar = () => {
               <a
                 key={link.name}
                 href={link.href}
-                className="font-poppins text-sm font-medium text-white/90 hover:text-white transition-colors"
+                className="font-poppins text-sm font-medium text-white/90 hover:text-white transition-colors uppercase"
               >
                 {link.name}
               </a>
@@ -61,7 +61,7 @@ const Navbar = () => {
                 <a
                   key={link.name}
                   href={link.href}
-                  className="font-poppins text-sm font-medium text-white/90 hover:text-white transition-colors py-2"
+                  className="font-poppins text-sm font-medium text-white/90 hover:text-white transition-colors py-2 uppercase"
                   onClick={() => setIsOpen(false)}
                 >
                   {link.name}
