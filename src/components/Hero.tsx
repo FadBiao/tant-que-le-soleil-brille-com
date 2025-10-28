@@ -36,7 +36,7 @@ const Hero = () => {
         >
           <CarouselContent className="h-full">
             {heroImages.map((image, index) => (
-              <CarouselItem key={index} className="h-full">
+              <CarouselItem key={index} className="min-h-[calc(100vh-5rem)]">
                 <div 
                   className="h-full w-full bg-cover bg-center duration-1000 object-cover"
                   style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
@@ -45,7 +45,7 @@ const Hero = () => {
             ))}
           </CarouselContent>
         </Carousel>
-        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/20 to-transparent"></div>
       </div>
 
       {/* Content */}
