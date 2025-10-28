@@ -5,7 +5,7 @@ import clubReading from "@/assets/club-reading.jpg";
 
 const ClubSection = () => {
   return (
-    <section id="club" className="py-24 bg-gradient-dawn">
+    <section id="club" className="pt-32 pb-24 bg-gradient-dawn">
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
