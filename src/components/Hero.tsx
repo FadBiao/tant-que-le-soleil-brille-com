@@ -20,8 +20,8 @@ const Hero = () => {
         delay: 5000
       })]} className="h-full w-full">
           <CarouselContent className="h-full">
-            {heroImages.map((image, index) => <CarouselItem key={index} className="min-h-[calc(100vh-5rem)]">
-                <div className="h-full w-full bg-cover bg-center duration-1000 object-cover" style={{
+            {heroImages.map((image, index) => <CarouselItem key={index} className="h-full">
+                <div className="h-full w-full" style={{
               backgroundImage: `url(${image})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center'
