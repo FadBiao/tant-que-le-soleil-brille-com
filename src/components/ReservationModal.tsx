@@ -28,7 +28,7 @@ const reservationSchema = z.object({
   firstName: z.string().min(2, "Le prénom doit contenir au moins 2 caractères").max(100),
   name: z.string().min(2, "Le nom doit contenir au moins 2 caractères").max(100),
   email: z.string().email("Email invalide").max(255),
-  phone: z.preprocess((v) => (typeof v === 'string' && v.trim() === '' ? undefined : v), z.string().min(10, "Numéro de téléphone invalide")).optional(),
+  phone: z.string({ required_error: "Le téléphone est requis" }).trim().min(10, "Numéro de téléphone invalide"),
   sessionId: z.string().min(1, "Veuillez choisir une séance"),
   quantity: z.number().min(1, "Minimum 1 place").max(30, "Maximum 30 places"),
 });
@@ -261,9 +261,9 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Téléphone (optionnel)</FormLabel>
+                  <FormLabel>Téléphone</FormLabel>
                   <FormControl>
-                    <Input type="tel" placeholder="+33 6 12 34 56 78" {...field} />
+                    <Input type="tel" inputMode="tel" autoComplete="tel" placeholder="+33 6 12 34 56 78" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
