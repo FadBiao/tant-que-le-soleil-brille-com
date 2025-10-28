@@ -59,7 +59,7 @@ const ClubSection = () => {
             </div>
 
             <Link to="/club">
-              <Button size="lg" className="w-full bg-gradient-sun shadow-glow group">
+              <Button size="lg" className="w-full bg-gradient-sun shadow-glow group mt-2">
                 En savoir plus
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
