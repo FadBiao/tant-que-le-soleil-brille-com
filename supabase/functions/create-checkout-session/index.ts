@@ -190,7 +190,6 @@ serve(async (req) => {
             currency: 'eur',
             product_data: {
               name: `${event.name} - ${session.session_name}`,
-              description: event.description || '',
             },
             unit_amount: event.price_cents,
           },
