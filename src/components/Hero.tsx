@@ -2,19 +2,23 @@ import { Button } from "@/components/ui/button";
 import { Headphones, BookOpen, Sparkles } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import heroSun from "@/assets/hero-sun.jpg";
-import heroSunsetOcean from "@/assets/hero-sunset-ocean.jpg";
-import heroSparklesWater from "@/assets/hero-sparkles-water.jpg";
-import heroSunOcean from "@/assets/hero-sun-ocean.jpg";
-import heroGoldenPath from "@/assets/hero-golden-path.jpg";
+import heroClubRoom from "@/assets/hero-club-room.png";
+import heroIbbyCollage from "@/assets/hero-ibby-collage.png";
+import heroBooks from "@/assets/hero-books.jpeg";
+import heroPodcasts from "@/assets/hero-podcasts.png";
+import heroWalking from "@/assets/hero-walking.jpeg";
+import heroBookItems from "@/assets/hero-book-items.jpg";
+import heroBanner from "@/assets/hero-banner.jpeg";
 
 const Hero = () => {
   const heroImages = [
-    heroSun,
-    heroSunsetOcean,
-    heroSparklesWater,
-    heroSunOcean,
-    heroGoldenPath
+    heroClubRoom,
+    heroIbbyCollage,
+    heroBooks,
+    heroPodcasts,
+    heroWalking,
+    heroBookItems,
+    heroBanner
   ];
 
   return (
@@ -34,8 +38,8 @@ const Hero = () => {
             {heroImages.map((image, index) => (
               <CarouselItem key={index} className="h-screen">
                 <div 
-                  className="h-full w-full bg-cover bg-center duration-1000"
-                  style={{ backgroundImage: `url(${image})` }}
+                  className="h-full w-full bg-cover bg-center duration-1000 object-cover"
+                  style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                 />
               </CarouselItem>
             ))}
