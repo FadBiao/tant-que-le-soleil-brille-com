@@ -44,6 +44,7 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sessions, setSessions] = useState<any[]>([]);
   const [selectedSession, setSelectedSession] = useState<any>(null);
+  const [eventPrice, setEventPrice] = useState<number>(0);
 
   const form = useForm<ReservationFormValues>({
     resolver: zodResolver(reservationSchema),
@@ -85,6 +86,7 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
 
       const event = events[0];
       setSessions(event.event_sessions || []);
+      setEventPrice(event.price_cents / 100); // Convert cents to euros
     } catch (error) {
       console.error('Error loading sessions:', error);
       toast({
@@ -189,11 +191,11 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
               <div className="flex-1">
                 <h4 className="font-poppins font-semibold text-sm mb-1">Lieu de l'Atelier</h4>
                 <p className="font-poppins text-sm text-muted-foreground">
-                  8 Place de la Gare des Vallées<br />
-                  92250 La Garenne-Colombes, France
+                  Café Poésie, 10 Pass. Thiéré<br />
+                  75011 Paris, France
                 </p>
                 <p className="font-poppins text-sm font-semibold text-primary mt-2">
-                  Tarif: 25€ par personne
+                  Tarif: {eventPrice}€ par personne
                 </p>
               </div>
             </div>
@@ -349,7 +351,7 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
 
                 <div className="p-3 bg-muted rounded-md">
                   <p className="text-sm font-semibold">
-                    Total: {form.watch('quantity') * 25}€
+                    Total: {form.watch('quantity') * eventPrice}€
                   </p>
                 </div>
               </>
