@@ -2,13 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Headphones, BookOpen, Sparkles } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import heroClubRoom from "@/assets/hero-club-new.png";
-import heroIbbyCollage from "@/assets/hero-ibby-new.png";
-import heroBooks from "@/assets/hero-books-new.jpeg";
-import heroPodcasts from "@/assets/hero-podcasts-new.png";
-import heroWalking from "@/assets/hero-walking-new.jpeg";
-import heroBookItems from "@/assets/hero-items-new.jpg";
-import heroBanner from "@/assets/hero-banner-new.jpeg";
+import heroClubRoom from "@/assets/hero-club-room.png";
+import heroIbbyCollage from "@/assets/hero-ibby-collage.png";
+import heroBooks from "@/assets/hero-books.jpeg";
+import heroPodcasts from "@/assets/hero-podcasts.png";
+import heroWalking from "@/assets/hero-walking.jpeg";
+import heroBookItems from "@/assets/hero-book-items.jpg";
+import heroBanner from "@/assets/hero-banner.jpeg";
 
 const Hero = () => {
   const heroImages = [
@@ -22,9 +22,9 @@ const Hero = () => {
   ];
 
   return (
-    <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-[72px]">
+    <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Carousel with Overlay */}
-      <div className="absolute top-[72px] left-0 right-0 bottom-0">
+      <div className="absolute inset-0">
         <Carousel
           opts={{ loop: true }}
           plugins={[
@@ -36,7 +36,7 @@ const Hero = () => {
         >
           <CarouselContent className="h-full">
             {heroImages.map((image, index) => (
-              <CarouselItem key={index} className="h-full">
+              <CarouselItem key={index} className="h-screen">
                 <div 
                   className="h-full w-full bg-cover bg-center duration-1000 object-cover"
                   style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
@@ -45,7 +45,7 @@ const Hero = () => {
             ))}
           </CarouselContent>
         </Carousel>
-        <div className="absolute top-[72px] left-0 right-0 bottom-0 bg-gradient-to-b from-background/10 via-background/20 to-transparent pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background"></div>
       </div>
 
       {/* Content */}
