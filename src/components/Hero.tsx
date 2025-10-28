@@ -2,13 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Headphones, BookOpen, Sparkles } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import heroClubRoom from "@/assets/hero-club-room.png";
-import heroIbbyCollage from "@/assets/hero-ibby-collage.png";
-import heroBooks from "@/assets/hero-books.jpeg";
-import heroPodcasts from "@/assets/hero-podcasts.png";
-import heroWalking from "@/assets/hero-walking.jpeg";
-import heroBookItems from "@/assets/hero-book-items.jpg";
-import heroBanner from "@/assets/hero-banner.jpeg";
+import heroClubRoom from "@/assets/hero-club-new.png";
+import heroIbbyCollage from "@/assets/hero-ibby-new.png";
+import heroBooks from "@/assets/hero-books-new.jpeg";
+import heroPodcasts from "@/assets/hero-podcasts-new.png";
+import heroWalking from "@/assets/hero-walking-new.jpeg";
+import heroBookItems from "@/assets/hero-items-new.jpg";
+import heroBanner from "@/assets/hero-banner-new.jpeg";
 
 const Hero = () => {
   const heroImages = [
