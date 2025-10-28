@@ -71,9 +71,17 @@ serve(async (req) => {
   }
 
   try {
+    // Support both query params (for direct URL access) and body (for function invocation)
     const url = new URL(req.url);
-    const token = url.searchParams.get('t');
-    const eventId = url.searchParams.get('event');
+    let token = url.searchParams.get('t');
+    let eventId = url.searchParams.get('event');
+    
+    // If no token in query params, try to get it from body
+    if (!token && req.method === 'POST') {
+      const body = await req.json();
+      token = body.token;
+      eventId = body.eventId || body.event;
+    }
 
     // Validate token with Zod
     const tokenSchema = z.string().trim()
