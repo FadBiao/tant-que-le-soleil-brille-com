@@ -119,6 +119,10 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
       }
 
       const event = events[0];
+      // Pre-open a tab to avoid popup blockers in iframe environments
+      const paymentWindow = typeof window !== 'undefined'
+        ? window.open('', '_blank', 'noopener,noreferrer')
+        : null;
 
       // Create checkout session
       const { data: sessionData, error: sessionError } = await supabase.functions.invoke(
@@ -143,16 +147,26 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
 
       console.log('Checkout session response:', sessionData);
 
-      // Redirect to Stripe Checkout (escape iframe)
+      // Open Stripe Checkout using the pre-opened tab, with fallbacks
       if (sessionData.url) {
+        let opened = false;
         try {
-          if (window.top) {
+          if (paymentWindow && !paymentWindow.closed) {
+            paymentWindow.location.href = sessionData.url;
+            paymentWindow.focus();
+            opened = true;
+          } else if (window.top) {
             (window.top as Window).location.href = sessionData.url;
+            opened = true;
           } else {
             window.location.href = sessionData.url;
+            opened = true;
           }
-        } catch (e) {
-          // Fallback: open in a new tab without being blocked
+        } catch (_) {
+          // ignored, will try anchor fallback below
+        }
+
+        if (!opened) {
           const a = document.createElement('a');
           a.href = sessionData.url;
           a.target = '_blank';
@@ -161,6 +175,16 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
           a.click();
           a.remove();
         }
+
+        toast({
+          title: "✅ Paiement",
+          description: "Le paiement s'ouvre dans un nouvel onglet.",
+        });
+
+        // Close modal and reset form to avoid UI being stuck
+        onOpenChange(false);
+        form.reset();
+        setIsSubmitting(false);
       } else {
         throw new Error('URL de paiement non disponible');
       }
