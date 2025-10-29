@@ -117,14 +117,6 @@ const ReviewsSection = () => {
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                className="h-6 w-6 fill-[hsl(var(--navbar-bg))] text-[hsl(var(--navbar-bg))]"
-              />
-            ))}
-          </div>
           <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-[hsl(0,0%,0%)]">
             Avis des lecteurs
           </h2>
@@ -146,7 +138,7 @@ const ReviewsSection = () => {
               {reviews.map((review) => (
                 <CarouselItem key={review.id} className="md:basis-1/2 lg:basis-1/3">
                   <div className="p-2">
-                    <Card className="border-border hover:shadow-soft transition-shadow duration-300 h-full">
+                    <Card className="border-border hover:shadow-soft transition-shadow duration-300 aspect-square">
                       <CardContent className="p-6 flex flex-col h-full">
                         {/* Header avec nom */}
                         <div className="mb-4">
@@ -155,18 +147,8 @@ const ReviewsSection = () => {
                           </p>
                         </div>
 
-                        {/* Étoiles */}
-                        <div className="flex gap-1 mb-4">
-                          {[...Array(review.rating)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className="h-4 w-4 fill-[hsl(var(--navbar-bg))] text-[hsl(var(--navbar-bg))]"
-                            />
-                          ))}
-                        </div>
-
                         {/* Contenu */}
-                        <p className="font-poppins text-sm text-[hsl(0,0%,0%)] leading-relaxed flex-grow">
+                        <p className="font-poppins text-sm text-[hsl(0,0%,0%)] leading-relaxed flex-grow overflow-y-auto">
                           {review.content}
                         </p>
                       </CardContent>
