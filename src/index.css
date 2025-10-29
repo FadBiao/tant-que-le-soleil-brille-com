@@ -8,6 +8,9 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
+    /* Navbar height */
+    --nav-h: 64px;
+    
     /* Couleurs solaires et chaleureuses */
     --background: 35 45% 98%;
     --foreground: 28 30% 25%;
@@ -98,5 +101,17 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Responsive navbar height */
+  @media (max-width: 768px) {
+    :root {
+      --nav-h: 56px;
+    }
+  }
+
+  /* Scroll margin for anchor links */
+  section[id] {
+    scroll-margin-top: var(--nav-h);
   }
 }

@@ -88,14 +88,14 @@ const Footer = () => {
             <a href="/#accueil" className="text-[hsl(var(--navbar-bg))] hover:underline uppercase font-medium">
               Accueil
             </a>
-            <a href="/#podcasts" className="text-[hsl(var(--navbar-bg))] hover:underline uppercase font-medium">
-              Podcasts
-            </a>
             <a href="/#livre" className="text-[hsl(var(--navbar-bg))] hover:underline uppercase font-medium">
               Le Livre
             </a>
             <a href="/#club" className="text-[hsl(var(--navbar-bg))] hover:underline uppercase font-medium">
               Club de Lecture
+            </a>
+            <a href="/#podcasts" className="text-[hsl(var(--navbar-bg))] hover:underline uppercase font-medium">
+              Podcasts
             </a>
             <a href="/#contact" className="text-[hsl(var(--navbar-bg))] hover:underline uppercase font-medium">
               Contact
