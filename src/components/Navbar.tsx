@@ -36,7 +36,7 @@ const Navbar = () => {
           <Link to="/" className="flex items-center gap-2 group">
             <img src={logo} alt="Tant que le Soleil Brille" className="h-10 w-10 animate-glow-pulse" />
             <span className="font-playfair text-2xl font-bold text-white">
-              Tant que le Soleil Brille
+              CLUB SOLEIL SUR TOI
             </span>
           </Link>
 
