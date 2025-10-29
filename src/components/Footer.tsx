@@ -1,79 +1,138 @@
-import { Instagram, Facebook, Youtube } from "lucide-react";
+import { Instagram, Facebook, Youtube, Send } from "lucide-react";
 import logo from "@/assets/logo-sun.png";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+const emailSchema = z.object({
+  email: z.string().trim().email("Adresse email invalide").max(255, "L'email ne peut pas dépasser 255 caractères"),
+});
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { toast } = useToast();
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      emailSchema.parse({ email });
+      
+      toast({
+        title: "Inscription confirmée ! ☀️",
+        description: "Merci de rejoindre notre communauté lumineuse.",
+      });
+      
+      setEmail("");
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Erreur",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <footer className="bg-[hsl(var(--navbar-bg))]/95 backdrop-blur-sm text-white py-12 border-t border-white/20">
-      <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
-          {/* Logo & Description */}
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-2 mb-4">
-              <img src={logo} alt="Tant que le Soleil Brille" className="h-8 w-8 object-contain brightness-0 invert" />
-              <span className="font-playfair text-xl font-bold">
-                Tant que le Soleil Brille
-              </span>
-            </div>
-            <p className="font-poppins text-sm text-white/70 max-w-md">
-              Un univers de lumière, de positivité et de développement personnel.
-              Rejoignez notre communauté et laissez briller votre lumière intérieure.
+    <footer className="bg-background">
+      {/* Newsletter Section */}
+      <div className="bg-[hsl(var(--navbar-bg))] text-white py-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-8">
+              As-tu reçu mon message ?
+            </h2>
+            
+            <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+              <Input
+                type="email"
+                placeholder="Ton email..."
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                maxLength={255}
+                className="bg-white/10 border-white/30 text-white placeholder:text-white/60 focus:border-white h-14 text-base px-6 rounded-full"
+                required
+              />
+              <Button 
+                type="submit" 
+                disabled={isSubmitting}
+                className="bg-white text-[hsl(var(--navbar-bg))] hover:bg-white/90 h-14 px-8 rounded-full font-semibold uppercase"
+              >
+                <Send className="mr-2 h-5 w-5" />
+                S'inscrire
+              </Button>
+            </form>
+            
+            <p className="font-poppins text-base text-white/80">
+              Inscris-toi à ma newsletter et je t'enverrai des questions rares,
+              des rappels honnêtes, et bien plus encore.
             </p>
           </div>
-
-          {/* Navigation */}
-          <div>
-            <h3 className="font-playfair font-semibold mb-4">Navigation</h3>
-            <ul className="space-y-2 font-poppins text-sm">
-              {["Accueil", "Podcasts", "Le Livre", "Club de Lecture", "Galerie"].map((item) => (
-                <li key={item}>
-                  <a 
-                    href={`#${item.toLowerCase().replace(/ /g, '-')}`}
-                    className="text-white/70 hover:text-white transition-colors"
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Social Media */}
-          <div>
-            <h3 className="font-playfair font-semibold mb-4">Suivez-nous</h3>
-            <div className="flex gap-4">
-              <a 
-                href="#" 
-                className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"
-                aria-label="Instagram"
-              >
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a 
-                href="#" 
-                className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"
-                aria-label="Facebook"
-              >
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a 
-                href="#" 
-                className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"
-                aria-label="Youtube"
-              >
-                <Youtube className="h-5 w-5" />
-              </a>
-            </div>
-          </div>
         </div>
+      </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-white/20 text-center">
-          <p className="font-poppins text-sm text-white/70">
-            © {currentYear} Tant que le Soleil Brille. Tous droits réservés. 
-            Fait avec ❤️ et ☀️
-          </p>
+      {/* Links & Social Section */}
+      <div className="bg-white py-8 border-t border-border">
+        <div className="container mx-auto px-4">
+          {/* Navigation Links */}
+          <div className="flex flex-wrap justify-center gap-6 mb-6 font-poppins text-sm">
+            <a href="/#accueil" className="text-[hsl(var(--navbar-bg))] hover:underline uppercase font-medium">
+              Accueil
+            </a>
+            <a href="/#podcasts" className="text-[hsl(var(--navbar-bg))] hover:underline uppercase font-medium">
+              Podcasts
+            </a>
+            <a href="/#livre" className="text-[hsl(var(--navbar-bg))] hover:underline uppercase font-medium">
+              Le Livre
+            </a>
+            <a href="/#club" className="text-[hsl(var(--navbar-bg))] hover:underline uppercase font-medium">
+              Club de Lecture
+            </a>
+            <a href="/#contact" className="text-[hsl(var(--navbar-bg))] hover:underline uppercase font-medium">
+              Contact
+            </a>
+          </div>
+
+          {/* Social Media Icons */}
+          <div className="flex justify-center gap-4 mb-6">
+            <a 
+              href="#" 
+              className="bg-[hsl(var(--navbar-bg))] hover:bg-[hsl(var(--navbar-bg))]/80 text-white p-3 rounded-full transition-colors"
+              aria-label="Instagram"
+            >
+              <Instagram className="h-5 w-5" />
+            </a>
+            <a 
+              href="#" 
+              className="bg-[hsl(var(--navbar-bg))] hover:bg-[hsl(var(--navbar-bg))]/80 text-white p-3 rounded-full transition-colors"
+              aria-label="Facebook"
+            >
+              <Facebook className="h-5 w-5" />
+            </a>
+            <a 
+              href="#" 
+              className="bg-[hsl(var(--navbar-bg))] hover:bg-[hsl(var(--navbar-bg))]/80 text-white p-3 rounded-full transition-colors"
+              aria-label="Youtube"
+            >
+              <Youtube className="h-5 w-5" />
+            </a>
+          </div>
+
+          {/* Copyright */}
+          <div className="text-center">
+            <p className="font-poppins text-sm text-muted-foreground">
+              © {currentYear} Tant que le Soleil Brille. Tous droits réservés. Fait avec ❤️ et ☀️
+            </p>
+          </div>
         </div>
       </div>
     </footer>
