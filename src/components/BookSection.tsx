@@ -35,10 +35,14 @@ C’est une conversation entre ton cœur et la lumière que tu avais oubliée. D
             {/* Testimonials */}
             
 
-            <Button size="lg" className="bg-gradient-sun shadow-glow">
-              <ShoppingCart className="mr-2 h-5 w-5" />
-              Commander sur Amazon
-            </Button>
+            <div className="flex justify-center">
+              <Button size="lg" className="bg-gradient-sun shadow-glow" asChild>
+                <a href="https://www.amazon.fr/Tant-soleil-brille-Ibtissam-Madani/dp/2322522988" target="_blank" rel="noopener noreferrer">
+                  <ShoppingCart className="mr-2 h-5 w-5" />
+                  Commander sur Amazon
+                </a>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
