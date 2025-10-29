@@ -138,7 +138,7 @@ const ReviewsSection = () => {
               {reviews.map((review) => (
                 <CarouselItem key={review.id} className="md:basis-1/2 lg:basis-1/3">
                   <div className="p-2">
-                    <Card className="border-border hover:shadow-soft transition-shadow duration-300 aspect-square">
+                    <Card className="border-border hover:shadow-soft transition-shadow duration-300 aspect-square rounded-none">
                       <CardContent className="p-6 flex flex-col h-full">
                         {/* Header avec nom */}
                         <div className="mb-4">
