@@ -147,18 +147,15 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
 
       console.log('Checkout session response:', sessionData);
 
-      // Open Stripe Checkout using the pre-opened tab, with fallbacks
-        if (sessionData.url) {
-          // In iframe contexts, prefer showing a user-clickable link instead of auto-redirects
-          setCheckoutUrl(sessionData.url);
-          toast({
-            title: "Lien de paiement prêt",
-            description: "Cliquez sur \"Ouvrir le paiement Stripe\" pour continuer dans un nouvel onglet.",
-          });
-          setIsSubmitting(false);
-        } else {
-          throw new Error('URL de paiement non disponible');
-        }
+      // In iframe contexts, prefer showing a user-clickable link instead of auto-redirects
+      if (sessionData.url) {
+        setCheckoutUrl(sessionData.url);
+        toast({
+          title: "Lien de paiement prêt",
+          description: "Cliquez sur \"Ouvrir le paiement Stripe\" pour continuer dans un nouvel onglet.",
+        });
+        setIsSubmitting(false);
+      } else {
         throw new Error('URL de paiement non disponible');
       }
     } catch (error) {
