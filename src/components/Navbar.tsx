@@ -64,7 +64,7 @@ const Navbar = () => {
               )
             ))}
             <Button variant="default" className="bg-white text-[hsl(var(--navbar-bg))] hover:bg-white/90">
-              Rejoindre la communauté
+              Rejoindre la newsletter
             </Button>
           </div>
 
@@ -107,7 +107,7 @@ const Navbar = () => {
                 )
               ))}
               <Button variant="default" className="bg-white text-[hsl(var(--navbar-bg))] hover:bg-white/90 w-full">
-                Rejoindre la communauté
+                Rejoindre la newsletter
               </Button>
             </div>
           </div>
