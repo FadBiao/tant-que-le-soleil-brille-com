@@ -33,19 +33,7 @@ C’est une conversation entre ton cœur et la lumière que tu avais oubliée. D
             </Card>
 
             {/* Testimonials */}
-            <div className="mb-6">
-              <h3 className="font-playfair text-xl font-semibold mb-3 text-foreground">
-                Ce que disent nos lecteurs
-              </h3>
-              <div className="space-y-3">
-                {["Un livre qui transforme, inspire et réchauffe le cœur", "Des mots qui résonnent profondément et qui apaisent", "Une lecture essentielle pour rayonner au quotidien"].map((testimonial, index) => <div key={index} className="flex items-start gap-2">
-                    <Star className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <p className="font-poppins text-sm text-muted-foreground">
-                      {testimonial}
-                    </p>
-                  </div>)}
-              </div>
-            </div>
+            
 
             <Button size="lg" className="bg-gradient-sun shadow-glow">
               <ShoppingCart className="mr-2 h-5 w-5" />
