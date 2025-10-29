@@ -4,7 +4,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[hsl(var(--navbar-bg))] text-white py-12 border-t border-white/20">
+    <footer className="bg-[hsl(var(--navbar-bg))]/95 backdrop-blur-sm text-white py-12 border-t border-white/20">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           {/* Logo & Description */}
