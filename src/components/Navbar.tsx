@@ -11,9 +11,9 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Accueil", href: "/" },
-    { name: "Podcasts", href: isHomePage ? "#podcasts" : "/#podcasts" },
     { name: "Le Livre", href: isHomePage ? "#livre" : "/#livre" },
     { name: "Club Soleil Sur Toi", href: isHomePage ? "#club" : "/#club" },
+    { name: "Podcasts", href: isHomePage ? "#podcasts" : "/#podcasts" },
   ];
 
   const scrollToSection = (href: string) => {
