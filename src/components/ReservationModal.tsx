@@ -45,6 +45,7 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
   const [sessions, setSessions] = useState<any[]>([]);
   const [selectedSession, setSelectedSession] = useState<any>(null);
   const [eventPrice, setEventPrice] = useState<number>(65);
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
 
   const form = useForm<ReservationFormValues>({
     resolver: zodResolver(reservationSchema),
@@ -99,7 +100,7 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
 
   const onSubmit = async (data: ReservationFormValues) => {
     setIsSubmitting(true);
-    
+    setCheckoutUrl(null);
     try {
       toast({
         title: "☀️ Réservation en cours",
@@ -143,19 +144,13 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
 
       console.log('Checkout session response:', sessionData);
 
-      // Open Stripe Checkout in a new tab (required because Lovable preview is in iframe)
+      // Provide user-initiated opening to avoid iframe popup blockers
       if (sessionData.url) {
-        console.log('Opening Stripe in new tab:', sessionData.url);
-        window.open(sessionData.url, '_blank');
-        
+        setCheckoutUrl(sessionData.url);
         toast({
-          title: "✅ Paiement ouvert",
-          description: "Complétez votre paiement dans le nouvel onglet",
+          title: "Lien de paiement prêt",
+          description: "Cliquez sur \"Ouvrir le paiement Stripe\" ci-dessous.",
         });
-        
-        // Close modal and reset form
-        onOpenChange(false);
-        form.reset();
         setIsSubmitting(false);
       } else {
         throw new Error('URL de paiement non disponible');
@@ -361,10 +356,24 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
               type="submit"
               className="w-full bg-gradient-sun shadow-glow"
               size="lg"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !!checkoutUrl}
             >
-              {isSubmitting ? "Réservation en cours..." : "Confirmer ma Réservation"}
+              {isSubmitting ? "Réservation en cours..." : checkoutUrl ? "Lien Stripe prêt ci-dessous" : "Confirmer ma Réservation"}
             </Button>
+
+            {checkoutUrl && (
+              <div className="mt-4 p-4 bg-muted rounded-md border">
+                <p className="text-sm mb-3">Ouvrez le paiement dans un nouvel onglet :</p>
+                <a href={checkoutUrl} target="_blank" rel="noopener noreferrer">
+                  <Button className="w-full bg-gradient-sun shadow-glow" size="lg">
+                    Ouvrir le paiement Stripe
+                  </Button>
+                </a>
+                <p className="text-xs text-muted-foreground mt-2 break-all">
+                  Si le bouton est bloqué, copiez ce lien: {checkoutUrl}
+                </p>
+              </div>
+            )}
           </form>
         </Form>
       </DialogContent>
