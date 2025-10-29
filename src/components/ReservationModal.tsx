@@ -176,7 +176,7 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
       <DialogContent className="sm:max-w-[860px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-playfair text-2xl flex items-center gap-2">
-            <Ticket className="h-6 w-6 text-primary" />
+            <Ticket className="h-6 w-6 text-[hsl(var(--navbar-bg))]" />
             Réserver ma Place
           </DialogTitle>
           <DialogDescription className="font-poppins">
@@ -184,17 +184,17 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
           </DialogDescription>
         </DialogHeader>
 
-        <div className="mb-4 p-4 bg-gradient-dawn rounded-lg border-l-4 border-primary">
+        <div className="mb-4 p-4 bg-gradient-dawn rounded-lg border-l-4 border-[hsl(var(--navbar-bg))]">
           <div className="flex flex-col gap-3">
             <div className="flex items-start gap-3">
-              <Calendar className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+              <Calendar className="h-5 w-5 text-[hsl(var(--navbar-bg))] mt-0.5 flex-shrink-0" />
               <div className="flex-1">
                 <h4 className="font-poppins font-semibold text-sm mb-1">Lieu de l'Atelier</h4>
                 <p className="font-poppins text-sm text-muted-foreground">
                   Café Poésie, 10 Pass. Thiéré<br />
                   75011 Paris, France
                 </p>
-                <p className="font-poppins text-sm font-semibold text-primary mt-2">
+                <p className="font-poppins text-sm font-semibold text-[hsl(var(--navbar-bg))] mt-2">
                   Tarif: {eventPrice}€ par personne
                 </p>
               </div>
@@ -359,7 +359,7 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
 
             <Button
               type="submit"
-              className="w-full bg-gradient-sun shadow-glow"
+              className="w-full bg-[hsl(var(--navbar-bg))] hover:bg-[hsl(var(--navbar-bg))]/90 text-white"
               size="lg"
               disabled={isSubmitting}
             >

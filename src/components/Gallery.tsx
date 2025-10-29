@@ -36,8 +36,8 @@ const Gallery = () => {
                 alt={image.alt}
                 className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-sun opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
-              <div className="absolute inset-0 ring-4 ring-primary/0 group-hover:ring-primary/50 transition-all duration-300 rounded-lg"></div>
+              <div className="absolute inset-0 bg-[hsl(var(--navbar-bg))] opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 ring-4 ring-[hsl(var(--navbar-bg))]/0 group-hover:ring-[hsl(var(--navbar-bg))]/50 transition-all duration-300 rounded-lg"></div>
             </div>
           ))}
         </div>

@@ -64,7 +64,7 @@ const Contact = () => {
     <section id="contact" className="py-24 bg-gradient-dawn">
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="text-center mb-12 animate-fade-in">
-          <Sun className="h-12 w-12 text-primary mx-auto mb-4 animate-float" />
+          <Sun className="h-12 w-12 text-[hsl(var(--navbar-bg))] mx-auto mb-4 animate-float" />
           <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4 text-foreground">
             Restons en Contact
           </h2>
@@ -141,7 +141,7 @@ const Contact = () => {
                 <Button 
                   type="submit" 
                   size="lg" 
-                  className="w-full bg-gradient-sun shadow-glow"
+                  className="w-full bg-[hsl(var(--navbar-bg))] hover:bg-[hsl(var(--navbar-bg))]/90 text-white"
                   disabled={form.formState.isSubmitting}
                 >
                   <Send className="mr-2 h-5 w-5" />
@@ -152,10 +152,10 @@ const Contact = () => {
 
             <div className="mt-8 pt-8 border-t border-border text-center">
               <div className="inline-flex items-center gap-2 text-muted-foreground">
-                <Mail className="h-5 w-5 text-primary" />
+                <Mail className="h-5 w-5 text-[hsl(var(--navbar-bg))]" />
                 <p className="font-poppins text-sm">
                   Ou écrivez-nous directement à{" "}
-                  <a href="mailto:contact@tantquelesoleilbrille.com" className="text-primary hover:underline">
+                  <a href="mailto:contact@tantquelesoleilbrille.com" className="text-[hsl(var(--navbar-bg))] hover:underline">
                     contact@tantquelesoleilbrille.com
                   </a>
                 </p>

@@ -12,7 +12,7 @@ const ClubSection = () => {
           <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-foreground">
             Le Club Soleil sur toi
           </h2>
-          <h3 className="font-playfair text-2xl md:text-3xl font-semibold mb-4 text-primary">
+          <h3 className="font-playfair text-2xl md:text-3xl font-semibold mb-4 text-[hsl(var(--navbar-bg))]">
             Écrire, ressentir, guérir
           </h3>
           <p className="font-poppins text-lg text-muted-foreground max-w-3xl mx-auto">
@@ -38,28 +38,28 @@ const ClubSection = () => {
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <Calendar className="h-5 w-5 text-primary flex-shrink-0" />
+                  <Calendar className="h-5 w-5 text-[hsl(var(--navbar-bg))] flex-shrink-0" />
                   <div>
                     <p className="font-poppins text-sm font-semibold text-foreground">Dimanche 16 novembre 2025</p>
                     <p className="font-poppins text-xs text-muted-foreground">10h00-11h30 / 12h-13h30</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Users className="h-5 w-5 text-primary flex-shrink-0" />
+                  <Users className="h-5 w-5 text-[hsl(var(--navbar-bg))] flex-shrink-0" />
                   <div>
                     <p className="font-poppins text-sm text-foreground">Café Poésie, Paris 11e</p>
-                    <p className="font-poppins text-xs text-primary font-semibold">Places limitées à 13 personnes</p>
+                    <p className="font-poppins text-xs text-[hsl(var(--navbar-bg))] font-semibold">Places limitées à 13 personnes</p>
                   </div>
                 </div>
               </div>
               <div className="mt-4 pt-4 border-t border-border">
-                <p className="font-poppins text-2xl font-bold text-primary">65 €</p>
+                <p className="font-poppins text-2xl font-bold text-[hsl(var(--navbar-bg))]">65 €</p>
                 <p className="font-poppins text-xs text-muted-foreground">Carnet, boisson chaude et douceurs inclus</p>
               </div>
             </div>
 
             <Link to="/club">
-              <Button size="lg" className="w-full bg-gradient-sun shadow-glow group mt-2">
+              <Button size="lg" className="w-full bg-[hsl(var(--navbar-bg))] hover:bg-[hsl(var(--navbar-bg))]/90 text-white group mt-2">
                 En savoir plus
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>

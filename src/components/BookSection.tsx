@@ -16,14 +16,14 @@ const BookSection = () => {
             <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-foreground">
               Le Livre
               <br />
-              <span className="text-primary">Tant que le Soleil Brille</span>
+              <span className="text-[hsl(var(--navbar-bg))]">Tant que le Soleil Brille</span>
             </h2>
 
             <p className="font-poppins text-lg text-muted-foreground mb-6 leading-relaxed">Ce receuille n'est pas là pour t'endormir il est là pour te réveiller.</p>
 
-            <Card className="mb-6 border-l-4 border-primary bg-accent/30">
+            <Card className="mb-6 border-l-4 border-[hsl(var(--navbar-bg))] bg-accent/30">
               <CardContent className="p-4">
-                <Quote className="h-6 w-6 text-primary mb-2" />
+                <Quote className="h-6 w-6 text-[hsl(var(--navbar-bg))] mb-2" />
                 <p className="font-poppins text-sm italic text-foreground">"Tant que le soleil brille n’est pas un simple recueil de poésie.
 
 
@@ -35,7 +35,7 @@ C’est une conversation entre ton cœur et la lumière que tu avais oubliée. D
             
 
             <div className="flex justify-center">
-              <Button size="lg" className="bg-gradient-sun shadow-glow" asChild>
+              <Button size="lg" className="bg-[hsl(var(--navbar-bg))] hover:bg-[hsl(var(--navbar-bg))]/90 text-white" asChild>
                 <a href="https://www.amazon.fr/Tant-soleil-brille-Ibtissam-Madani/dp/2322522988" target="_blank" rel="noopener noreferrer">
                   <ShoppingCart className="mr-2 h-5 w-5" />
                   Commander sur Amazon
