@@ -27,13 +27,13 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 w-full bg-white z-50 border-b border-border/20 shadow-sm">
+    <nav className="fixed top-0 w-full bg-[hsl(var(--navbar-bg))] z-50 border-b border-white/20">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
             <img src={logo} alt="Tant que le Soleil Brille" className="h-10 w-10 animate-glow-pulse" />
-            <span className="font-playfair text-2xl font-bold text-foreground">
+            <span className="font-playfair text-2xl font-bold text-white">
               Tant que le Soleil Brille
             </span>
           </Link>
@@ -49,7 +49,7 @@ const Navbar = () => {
                     e.preventDefault();
                     scrollToSection(link.href);
                   }}
-                  className="font-poppins text-sm font-medium text-foreground/70 hover:text-foreground transition-colors uppercase cursor-pointer"
+                  className="font-poppins text-sm font-medium text-white/90 hover:text-white transition-colors uppercase cursor-pointer"
                 >
                   {link.name}
                 </a>
@@ -57,20 +57,20 @@ const Navbar = () => {
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="font-poppins text-sm font-medium text-foreground/70 hover:text-foreground transition-colors uppercase"
+                  className="font-poppins text-sm font-medium text-white/90 hover:text-white transition-colors uppercase"
                 >
                   {link.name}
                 </Link>
               )
             ))}
-            <Button variant="default" className="bg-primary text-primary-foreground hover:bg-primary/90">
+            <Button variant="default" className="bg-white text-[hsl(var(--navbar-bg))] hover:bg-white/90">
               Rejoindre la newsletter
             </Button>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-foreground"
+            className="md:hidden text-white"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
           >
@@ -91,7 +91,7 @@ const Navbar = () => {
                       e.preventDefault();
                       scrollToSection(link.href);
                     }}
-                    className="font-poppins text-sm font-medium text-foreground/70 hover:text-foreground transition-colors py-2 uppercase cursor-pointer"
+                    className="font-poppins text-sm font-medium text-white/90 hover:text-white transition-colors py-2 uppercase cursor-pointer"
                   >
                     {link.name}
                   </a>
@@ -100,13 +100,13 @@ const Navbar = () => {
                     key={link.name}
                     to={link.href}
                     onClick={() => setIsOpen(false)}
-                    className="font-poppins text-sm font-medium text-foreground/70 hover:text-foreground transition-colors py-2 uppercase"
+                    className="font-poppins text-sm font-medium text-white/90 hover:text-white transition-colors py-2 uppercase"
                   >
                     {link.name}
                   </Link>
                 )
               ))}
-              <Button variant="default" className="bg-primary text-primary-foreground hover:bg-primary/90 w-full">
+              <Button variant="default" className="bg-white text-[hsl(var(--navbar-bg))] hover:bg-white/90 w-full">
                 Rejoindre la newsletter
               </Button>
             </div>

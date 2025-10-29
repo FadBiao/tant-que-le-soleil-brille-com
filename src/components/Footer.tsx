@@ -4,7 +4,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-white text-foreground py-12 border-t border-border/20">
+    <footer className="bg-foreground text-background py-12">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           {/* Logo & Description */}
@@ -15,7 +15,7 @@ const Footer = () => {
                 Tant que le Soleil Brille
               </span>
             </div>
-            <p className="font-poppins text-sm text-muted-foreground max-w-md">
+            <p className="font-poppins text-sm text-background/70 max-w-md">
               Un univers de lumière, de positivité et de développement personnel.
               Rejoignez notre communauté et laissez briller votre lumière intérieure.
             </p>
@@ -29,7 +29,7 @@ const Footer = () => {
                 <li key={item}>
                   <a 
                     href={`#${item.toLowerCase().replace(/ /g, '-')}`}
-                    className="text-muted-foreground hover:text-primary transition-colors"
+                    className="text-background/70 hover:text-primary transition-colors"
                   >
                     {item}
                   </a>
@@ -44,21 +44,21 @@ const Footer = () => {
             <div className="flex gap-4">
               <a 
                 href="#" 
-                className="bg-foreground/10 hover:bg-primary p-2 rounded-full transition-colors"
+                className="bg-background/10 hover:bg-primary p-2 rounded-full transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram className="h-5 w-5" />
               </a>
               <a 
                 href="#" 
-                className="bg-foreground/10 hover:bg-primary p-2 rounded-full transition-colors"
+                className="bg-background/10 hover:bg-primary p-2 rounded-full transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook className="h-5 w-5" />
               </a>
               <a 
                 href="#" 
-                className="bg-foreground/10 hover:bg-primary p-2 rounded-full transition-colors"
+                className="bg-background/10 hover:bg-primary p-2 rounded-full transition-colors"
                 aria-label="Youtube"
               >
                 <Youtube className="h-5 w-5" />
@@ -68,8 +68,8 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-border/20 text-center">
-          <p className="font-poppins text-sm text-muted-foreground">
+        <div className="pt-8 border-t border-background/20 text-center">
+          <p className="font-poppins text-sm text-background/70">
             © {currentYear} Tant que le Soleil Brille. Tous droits réservés. 
             Fait avec ❤️ et ☀️
           </p>
