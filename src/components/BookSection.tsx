@@ -20,16 +20,15 @@ const BookSection = () => {
               <span className="text-primary">Tant que le Soleil Brille</span>
             </h2>
 
-            <p className="font-poppins text-lg text-muted-foreground mb-6 leading-relaxed">Livre
-Tant que le Soleil Brille</p>
+            <p className="font-poppins text-lg text-muted-foreground mb-6 leading-relaxed">Ce receuille n'est pas là pour t'endormir il est là pour te réveiller.</p>
 
             <Card className="mb-6 border-l-4 border-primary bg-accent/30">
               <CardContent className="p-4">
                 <Quote className="h-6 w-6 text-primary mb-2" />
-                <p className="font-poppins text-sm italic text-foreground">
-                  "Ce livre est une boussole pour retrouver son chemin vers la lumière,
-                  même dans les moments les plus sombres. Chaque page est un rayon d'espoir."
-                </p>
+                <p className="font-poppins text-sm italic text-foreground">"Tant que le soleil brille n’est pas un simple recueil de poésie.
+
+
+C’est une conversation entre ton cœur et la lumière que tu avais oubliée. Des mots vrais, écrits pour te relever, et te rappeler que la foi en toi liée à l'action change tout. Des milliers de lecteurs à travers le monde y ont trouvé un souffle nouveau. Aujourd’hui, c’est ton tour."</p>
               </CardContent>
             </Card>
 
