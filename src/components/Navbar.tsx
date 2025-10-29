@@ -63,9 +63,18 @@ const Navbar = () => {
                 </Link>
               )
             ))}
-            <Button variant="default" className="bg-white text-[hsl(var(--navbar-bg))] hover:bg-white/90">
+            <a
+              href={isHomePage ? "#newsletter" : "/#newsletter"}
+              onClick={(e) => {
+                if (isHomePage) {
+                  e.preventDefault();
+                  scrollToSection("#newsletter");
+                }
+              }}
+              className="bg-white text-[hsl(var(--navbar-bg))] hover:bg-white/90 px-6 py-2 rounded-md font-poppins text-sm font-medium transition-colors cursor-pointer"
+            >
               Rejoindre la newsletter
-            </Button>
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -106,9 +115,19 @@ const Navbar = () => {
                   </Link>
                 )
               ))}
-              <Button variant="default" className="bg-white text-[hsl(var(--navbar-bg))] hover:bg-white/90 w-full">
+              <a
+                href={isHomePage ? "#newsletter" : "/#newsletter"}
+                onClick={(e) => {
+                  if (isHomePage) {
+                    e.preventDefault();
+                    scrollToSection("#newsletter");
+                  }
+                  setIsOpen(false);
+                }}
+                className="bg-white text-[hsl(var(--navbar-bg))] hover:bg-white/90 w-full py-2 rounded-md font-poppins text-sm font-medium transition-colors cursor-pointer text-center"
+              >
                 Rejoindre la newsletter
-              </Button>
+              </a>
             </div>
           </div>
         )}
