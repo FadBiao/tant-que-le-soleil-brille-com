@@ -143,10 +143,24 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
 
       console.log('Checkout session response:', sessionData);
 
-      // Redirect to Stripe Checkout
+      // Redirect to Stripe Checkout (escape iframe)
       if (sessionData.url) {
-        console.log('Redirecting to Stripe:', sessionData.url);
-        window.location.href = sessionData.url;
+        try {
+          if (window.top) {
+            (window.top as Window).location.href = sessionData.url;
+          } else {
+            window.location.href = sessionData.url;
+          }
+        } catch (e) {
+          // Fallback: open in a new tab without being blocked
+          const a = document.createElement('a');
+          a.href = sessionData.url;
+          a.target = '_blank';
+          a.rel = 'noopener';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }
       } else {
         throw new Error('URL de paiement non disponible');
       }
