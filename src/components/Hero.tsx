@@ -11,7 +11,7 @@ import heroBookItems from "@/assets/hero-book-items.jpg";
 import heroBanner from "@/assets/hero-banner.jpeg";
 const Hero = () => {
   const heroImages = [heroClubRoom, heroIbbyCollage, heroBooks, heroPodcasts, heroWalking, heroBookItems, heroBanner];
-  return <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+  return <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Background Carousel with Overlay */}
       <div className="absolute top-0 left-0 right-0 bottom-0">
         <Carousel opts={{
