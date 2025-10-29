@@ -15,7 +15,7 @@ const ClubSection = () => {
           <h3 className="font-playfair text-2xl md:text-3xl font-semibold mb-4 text-[hsl(var(--navbar-bg))]">
             Écrire, ressentir, guérir
           </h3>
-          <p className="font-poppins text-lg text-muted-foreground max-w-3xl mx-auto">
+          <p className="font-poppins text-lg text-[hsl(0,0%,0%)] max-w-3xl mx-auto">
             Un moment suspendu pour déposer ce que tu ressens, écrire sans jugement, et repartir plus léger.e, inspiré.e, aligné.e.
           </p>
         </div>
