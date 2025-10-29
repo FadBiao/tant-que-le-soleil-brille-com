@@ -8,6 +8,3 @@ verify_jwt = false
 
 [functions.verify-ticket]
 verify_jwt = false
-
-[functions.verify-pin]
-verify_jwt = false
