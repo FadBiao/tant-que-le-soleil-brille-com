@@ -283,7 +283,7 @@ L'équipe Tant que le Soleil Brille
       `;
 
       const { error: emailError } = await resend.emails.send({
-        from: 'Tant que le Soleil Brille <onboarding@resend.dev>',
+        from: 'Tant que le Soleil Brille <info@tantquelesoleilbrille.com>',
         to: [order.user_email],
         subject: `🎟️ Confirmation de réservation - ${sessionName}`,
         html: emailHtml,
