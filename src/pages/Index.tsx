@@ -12,9 +12,9 @@ const Index = () => {
     <div className="min-h-screen font-poppins">
       <Navbar />
       <Hero />
-      <PodcastsSection />
       <BookSection />
       <ClubSection />
+      <PodcastsSection />
       <Gallery />
       <Contact />
       <Footer />
