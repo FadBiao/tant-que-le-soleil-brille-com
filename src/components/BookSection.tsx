@@ -19,7 +19,7 @@ const BookSection = () => {
               <span className="text-[hsl(var(--navbar-bg))]">Tant que le Soleil Brille</span>
             </h2>
 
-            <p className="font-poppins text-lg font-bold text-muted-foreground mb-6 leading-relaxed">Ce recueille n'est pas là pour t'endormir il est là pour te réveiller.</p>
+            <p className="font-poppins text-lg font-bold text-foreground mb-6 leading-relaxed">Ce recueille n'est pas là pour t'endormir il est là pour te réveiller.</p>
 
             <p className="font-poppins text-base italic text-justify text-muted-foreground mb-6 leading-relaxed">Tant que le soleil brille n'est pas un simple recueil de poésie. C'est une conversation entre ton cœur et la lumière que tu avais oubliée. Des mots vrais, écrits pour te relever, et te rappeler que la foi en toi liée à l'action change tout. Des milliers de lecteurs à travers le monde y ont trouvé un souffle nouveau. Aujourd'hui, c'est ton tour.</p>
 
