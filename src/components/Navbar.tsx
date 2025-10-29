@@ -32,7 +32,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <img src={logo} alt="Tant que le Soleil Brille" className="h-10 w-10 animate-glow-pulse" />
+            <img src={logo} alt="Tant que le Soleil Brille" className="h-10 w-10 object-contain mix-blend-multiply" />
             <span className="font-playfair text-2xl font-bold text-white">
               Tant que le Soleil Brille
             </span>
