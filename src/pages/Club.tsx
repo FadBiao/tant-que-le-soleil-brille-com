@@ -32,12 +32,12 @@ const Club = () => {
             <h2 className="font-playfair text-2xl md:text-3xl font-semibold mb-4 text-[hsl(var(--navbar-bg))]">
               Écrire, ressentir, guérir
             </h2>
-            <div className="grid md:grid-cols-2 gap-12 items-start mb-16 max-w-6xl mx-auto">
+            <div className="space-y-4 max-w-3xl mx-auto mb-8">
               <p className="font-poppins text-sm italic text-[hsl(0,0%,0%)]">
-                Parce que parfois, il faut juste une matinée, un carnet et quelques âmes lumineuses pour remettre du sens là où y en a plus.
+                "Parce que parfois, il faut juste une matinée, un carnet et quelques âmes lumineuses pour remettre du sens là où y en a plus."
               </p>
               <p className="font-poppins text-sm italic text-[hsl(0,0%,0%)]">
-                Le Club Soleil sur toi n'est pas un atelier d'écriture classique. C'est un moment suspendu, où tu viens déposer ce que tu ressens, écrire sans jugement, partager ce que tu traverses et repartir plus léger.e, inspiré.e, aligné.e.
+                "Le Club Soleil sur toi n'est pas un atelier d'écriture classique. C'est un moment suspendu, où tu viens déposer ce que tu ressens, écrire sans jugement, partager ce que tu traverses et repartir plus léger.e, inspiré.e, aligné.e."
               </p>
             </div>
           </div>
