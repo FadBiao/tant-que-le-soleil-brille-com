@@ -13,18 +13,19 @@ const Hero = () => {
   const heroImages = [heroClubRoom, heroIbbyCollage, heroBooks, heroPodcasts, heroWalking, heroBookItems, heroBanner];
   return <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Carousel with Overlay */}
-      <div className="absolute top-20 left-0 right-0 bottom-0">
+      <div className="absolute top-0 left-0 right-0 bottom-0">
         <Carousel opts={{
         loop: true
       }} plugins={[Autoplay({
         delay: 5000
       })]} className="h-full w-full">
           <CarouselContent className="h-full">
-            {heroImages.map((image, index) => <CarouselItem key={index} className="min-h-[calc(100vh-5rem)]">
-                <div className="h-full w-full bg-cover bg-center" style={{
+            {heroImages.map((image, index) => <CarouselItem key={index} className="h-screen">
+                <div className="h-full w-full" style={{
               backgroundImage: `url(${image})`,
               backgroundSize: 'cover',
-              backgroundPosition: 'center'
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
             }} />
               </CarouselItem>)}
           </CarouselContent>
