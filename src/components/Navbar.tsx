@@ -33,7 +33,7 @@ const Navbar = () => {
           <Link to="/" className="flex items-center gap-2 group">
             <img src={logo} alt="Tant que le Soleil Brille" className="h-8 w-8 object-contain brightness-0 invert" />
             <span className="font-playfair text-xl font-bold text-white">
-              Tant que le Soleil Brille
+              TANT QUE LE SOLEIL BRILLE
             </span>
           </Link>
 
