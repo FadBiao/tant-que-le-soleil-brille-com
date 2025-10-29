@@ -1,12 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Link, useNavigate } from "react-router-dom";
-import { Home, Camera, X } from "lucide-react";
-import type { User } from "@supabase/supabase-js";
+import { Link } from "react-router-dom";
+import { Home, Camera, X, Lock } from "lucide-react";
 import { Html5Qrcode } from "html5-qrcode";
 
 interface VerificationResult {
@@ -29,49 +28,46 @@ interface VerificationResult {
 }
 
 const AdminCheckin = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [authLoading, setAuthLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [pin, setPin] = useState("");
+  const [pinLoading, setPinLoading] = useState(false);
   const [token, setToken] = useState("");
   const [result, setResult] = useState<VerificationResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [scanning, setScanning] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    // Check authentication and admin role
-    const checkAuth = async () => {
-      const { data: { user }, error } = await supabase.auth.getUser();
-      
-      if (error || !user) {
-        toast.error("Accès refusé. Veuillez vous connecter.");
-        navigate('/');
-        return;
+  const handlePinSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!pin.trim()) {
+      toast.error("Veuillez entrer le code PIN");
+      return;
+    }
+
+    setPinLoading(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('verify-pin', {
+        body: { pin: pin.trim() },
+      });
+
+      if (error) throw error;
+
+      if (data.valid) {
+        setIsAuthenticated(true);
+        toast.success("Accès autorisé !");
+      } else {
+        toast.error("Code PIN incorrect");
+        setPin("");
       }
-
-      setUser(user);
-
-      // Check if user has admin or organizer role
-      const { data: roleData, error: roleError } = await supabase
-        .from('admin_roles')
-        .select('role')
-        .eq('user_id', user.id)
-        .in('role', ['admin', 'organizer'])
-        .maybeSingle();
-
-      if (roleError || !roleData) {
-        toast.error("Accès refusé. Vous n'avez pas les permissions nécessaires.");
-        navigate('/');
-        return;
-      }
-
-      setIsAdmin(true);
-      setAuthLoading(false);
-    };
-
-    checkAuth();
-  }, [navigate]);
+    } catch (error) {
+      console.error('PIN verification error:', error);
+      toast.error("Erreur de vérification");
+    } finally {
+      setPinLoading(false);
+    }
+  };
 
   const startScanning = async () => {
     try {
@@ -179,19 +175,52 @@ const AdminCheckin = () => {
     }
   };
 
-  if (authLoading) {
+  if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto"></div>
-          <p className="mt-4 text-amber-900">Vérification des permissions...</p>
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <Link to="/" className="inline-flex items-center gap-2 text-amber-900 hover:text-amber-700 mb-6">
+            <Home className="w-5 h-5" />
+            Retour à l'accueil
+          </Link>
+
+          <Card className="shadow-xl">
+            <CardHeader className="text-center">
+              <div className="flex justify-center mb-4">
+                <Lock className="w-12 h-12 text-amber-600" />
+              </div>
+              <CardTitle className="text-3xl">Accès Administrateur</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handlePinSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Code PIN
+                  </label>
+                  <Input
+                    type="password"
+                    value={pin}
+                    onChange={(e) => setPin(e.target.value)}
+                    placeholder="Entrez le code PIN"
+                    className="w-full text-center text-2xl tracking-widest"
+                    maxLength={10}
+                    autoFocus
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={pinLoading}
+                  className="w-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600"
+                >
+                  {pinLoading ? "Vérification..." : "Accéder"}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
-  }
-
-  if (!user || !isAdmin) {
-    return null;
   }
 
   return (
