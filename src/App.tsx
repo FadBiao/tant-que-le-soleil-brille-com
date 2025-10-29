@@ -9,6 +9,7 @@ import Podcasts from "./pages/Podcasts";
 import TicketVerify from "./pages/TicketVerify";
 import TicketSuccess from "./pages/TicketSuccess";
 import AdminCheckin from "./pages/AdminCheckin";
+import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/podcasts" element={<Podcasts />} />
           <Route path="/ticket/verify" element={<TicketVerify />} />
           <Route path="/ticket/success" element={<TicketSuccess />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/admin/checkin" element={<AdminCheckin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
