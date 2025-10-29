@@ -70,7 +70,7 @@ const Navbar = () => {
                   scrollToSection("#newsletter");
                 }
               }}
-              className="bg-white text-[hsl(var(--navbar-bg))] hover:bg-white/90 px-6 py-2 rounded-md font-poppins text-sm font-medium transition-colors cursor-pointer"
+              className="bg-white text-[hsl(var(--navbar-bg))] hover:bg-white/90 px-6 py-2 rounded-md font-poppins text-sm font-medium transition-colors cursor-pointer uppercase"
             >
               Rejoindre la newsletter
             </a>
@@ -124,7 +124,7 @@ const Navbar = () => {
                     }
                     setIsOpen(false);
                   }}
-                  className="bg-white text-[hsl(var(--navbar-bg))] hover:bg-white/90 w-full py-2 rounded-md font-poppins text-sm font-medium transition-colors cursor-pointer text-center"
+                  className="bg-white text-[hsl(var(--navbar-bg))] hover:bg-white/90 w-full py-2 rounded-md font-poppins text-sm font-medium transition-colors cursor-pointer text-center uppercase"
                 >
                   Rejoindre la newsletter
                 </a>
