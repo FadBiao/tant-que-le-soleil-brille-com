@@ -21,10 +21,10 @@ const PodcastsSection = () => {
   return <section id="podcasts" className="py-24 bg-gradient-dawn">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 animate-fade-in my-0 mx-[5px]">
-          <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4 text-foreground">
+          <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4 text-[hsl(0,0%,0%)]">
             Le podcast Soleil sur toi
           </h2>
-          <p className="font-poppins text-lg text-muted-foreground max-w-2xl mx-auto text-center font-medium">Chaque épisode t'offre des mots vrais, des réflexions profondes, portés par la joie et la bonne humeur d'Ibby, pour ne jamais lâcher, tant que le Soleil brille.</p>
+          <p className="font-poppins text-lg text-[hsl(0,0%,0%)] max-w-2xl mx-auto text-center font-medium">Chaque épisode t'offre des mots vrais, des réflexions profondes, portés par la joie et la bonne humeur d'Ibby, pour ne jamais lâcher, tant que le Soleil brille.</p>
         </div>
 
         {/* Theme Filters */}
