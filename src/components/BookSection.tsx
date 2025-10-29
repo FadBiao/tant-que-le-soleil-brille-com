@@ -20,7 +20,8 @@ const BookSection = () => {
               <span className="text-primary">Tant que le Soleil Brille</span>
             </h2>
 
-            <p className="font-poppins text-lg text-muted-foreground mb-6 leading-relaxed">Ce receuille n'est pas là pour t'endormir il est là pour te réveiller.			</p>
+            <p className="font-poppins text-lg text-muted-foreground mb-6 leading-relaxed">Livre
+Tant que le Soleil Brille</p>
 
             <Card className="mb-6 border-l-4 border-primary bg-accent/30">
               <CardContent className="p-4">
