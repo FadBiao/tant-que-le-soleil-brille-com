@@ -115,7 +115,7 @@ export default {
         "float": "float 3s ease-in-out infinite",
       },
       fontFamily: {
-        'sans': ['Inter', 'sans-serif'],
+        'sans': ['Montserrat', 'sans-serif'],
       },
     },
   },
