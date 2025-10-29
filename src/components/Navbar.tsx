@@ -13,7 +13,7 @@ const Navbar = () => {
     { name: "Accueil", href: "/" },
     { name: "Podcasts", href: isHomePage ? "#podcasts" : "/#podcasts" },
     { name: "Le Livre", href: isHomePage ? "#livre" : "/#livre" },
-    { name: "Club Soleil sur toi", href: isHomePage ? "#club" : "/#club" },
+    { name: "Club d'Ecriture", href: isHomePage ? "#club" : "/#club" },
     { name: "Galerie", href: isHomePage ? "#galerie" : "/#galerie" },
     { name: "Contact", href: isHomePage ? "#contact" : "/#contact" },
   ];
