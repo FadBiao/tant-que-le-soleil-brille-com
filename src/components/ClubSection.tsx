@@ -41,7 +41,7 @@ const ClubSection = () => {
                   <Calendar className="h-5 w-5 text-[hsl(var(--navbar-bg))] flex-shrink-0" />
                   <div>
                     <p className="font-poppins text-sm font-semibold text-foreground">Dimanche 16 novembre 2025</p>
-                    <p className="font-poppins text-xs text-muted-foreground">10h00-11h30 / 12h-13h30</p>
+                    <p className="font-poppins text-xs text-[hsl(0,0%,0%)]">10h00-11h30 / 12h-13h30</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
