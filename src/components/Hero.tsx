@@ -12,24 +12,30 @@ const Hero = () => {
   return <section id="accueil" className="relative min-h-[calc(100vh-var(--nav-h))] mt-[var(--nav-h)] flex items-center justify-center overflow-hidden">
       {/* Background Carousel with Overlay */}
       <div className="absolute inset-0">
-        <Carousel opts={{
-        loop: true
-      }} plugins={[Autoplay({
-        delay: 5000
-      })]} className="h-full w-full">
+        <Carousel 
+          opts={{
+            loop: true,
+            duration: 40,
+          }} 
+          plugins={[Autoplay({
+            delay: 5000,
+            stopOnInteraction: false,
+          })]} 
+          className="h-full w-full"
+        >
           <CarouselContent className="h-full">
             {heroImages.map((image, index) => <CarouselItem key={index} className="h-full">
-                <div className="h-full w-full relative bg-background">
+                <div className="h-full w-full relative bg-background transition-opacity duration-1000 ease-in-out">
                   <img 
                     src={image} 
                     alt={`Hero ${index + 1}`}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-contain transition-all duration-1000 ease-in-out"
                   />
                 </div>
               </CarouselItem>)}
           </CarouselContent>
         </Carousel>
-        <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/20 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/20 to-transparent pointer-events-none"></div>
       </div>
 
       {/* Content */}
