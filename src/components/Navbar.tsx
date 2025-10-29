@@ -28,12 +28,12 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 w-full bg-[hsl(var(--navbar-bg))] z-50 border-b border-white/20">
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <img src={logo} alt="Tant que le Soleil Brille" className="h-10 w-10 object-contain brightness-0 invert" />
-            <span className="font-playfair text-2xl font-bold text-white">
+            <img src={logo} alt="Tant que le Soleil Brille" className="h-8 w-8 object-contain brightness-0 invert" />
+            <span className="font-playfair text-xl font-bold text-white">
               Tant que le Soleil Brille
             </span>
           </Link>
