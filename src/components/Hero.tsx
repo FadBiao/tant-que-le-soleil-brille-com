@@ -23,7 +23,7 @@ const Hero = () => {
             {heroImages.map((image, index) => <CarouselItem key={index} className="h-screen">
                 <div className="h-full w-full" style={{
               backgroundImage: `url(${image})`,
-              backgroundSize: 'cover',
+              backgroundSize: 'contain',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat'
             }} />
