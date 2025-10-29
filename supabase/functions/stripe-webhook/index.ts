@@ -157,12 +157,12 @@ serve(async (req) => {
         );
       }
 
-      // Use first ticket for QR code
-      const mainTicket = createdTickets[0];
-
-      // Generate QR code URL
-      const qrUrl = `https://tant-que-le-soleil-brille-com.lovable.app/ticket/verify?t=${mainTicket.qr_token}`;
-      const qrImageUrl = generateQRCodeSVG(qrUrl);
+      // Generate QR codes for all tickets
+      const qrCodes = createdTickets.map(ticket => ({
+        qrUrl: `https://tant-que-le-soleil-brille-com.lovable.app/ticket/verify?t=${ticket.qr_token}`,
+        qrImageUrl: generateQRCodeSVG(`https://tant-que-le-soleil-brille-com.lovable.app/ticket/verify?t=${ticket.qr_token}`),
+        ticketNumber: createdTickets.indexOf(ticket) + 1
+      }));
 
       // Get session details
       const sessionDetails = order.event_sessions;
@@ -215,23 +215,25 @@ serve(async (req) => {
                   <p><strong>📅 Date :</strong> ${formattedDate}</p>
                 </div>
 
-                <p><strong>Voici votre ticket de réservation avec QR Code :</strong></p>
+                <p><strong>Voici ${qrCodes.length > 1 ? 'vos tickets de réservation avec QR Codes' : 'votre ticket de réservation avec QR Code'} :</strong></p>
                 
-                <div class="qr-code">
-                  <img src="${qrImageUrl}" alt="QR Code" />
-                </div>
-
-                <p style="text-align: center;">
-                  <a href="${qrUrl}" class="button">Voir ma confirmation</a>
-                </p>
+                ${qrCodes.map(qr => `
+                  <div class="qr-code">
+                    ${qrCodes.length > 1 ? `<h4 style="margin-bottom: 10px;">Billet ${qr.ticketNumber} sur ${qrCodes.length}</h4>` : ''}
+                    <img src="${qr.qrImageUrl}" alt="QR Code ${qr.ticketNumber}" />
+                    <p style="text-align: center; margin-top: 10px;">
+                      <a href="${qr.qrUrl}" class="button">Voir la confirmation ${qrCodes.length > 1 ? `du billet ${qr.ticketNumber}` : ''}</a>
+                    </p>
+                  </div>
+                `).join('')}
 
                 <div class="important">
                   <p><strong>⚠️ Informations importantes :</strong></p>
                   <ul>
-                    <li>Vous trouverez ci-joint votre ticket de réservation à présenter le jour de l'événement (version imprimée ou numérique acceptée).</li>
-                    <li>Un QR code est inclus pour validation à l'entrée.</li>
-                    <li>Merci d'apporter ce ticket le jour de la séance.</li>
-                    <li>Ce billet est nominatif et non remboursable après validation.</li>
+                    <li>Vous trouverez ci-dessus ${qrCodes.length > 1 ? 'vos tickets de réservation' : 'votre ticket de réservation'} à présenter le jour de l'événement (version imprimée ou numérique acceptée).</li>
+                    <li>${qrCodes.length > 1 ? 'Chaque QR code correspond à une place et doit être' : 'Le QR code doit être'} scanné individuellement pour validation à l'entrée.</li>
+                    <li>Merci d'apporter ${qrCodes.length > 1 ? 'ces tickets' : 'ce ticket'} le jour de la séance.</li>
+                    <li>${qrCodes.length > 1 ? 'Ces billets sont nominatifs et non remboursables' : 'Ce billet est nominatif et non remboursable'} après validation.</li>
                   </ul>
                 </div>
 
@@ -265,13 +267,14 @@ Votre place est bien confirmée !
 🕑 Heure : ${sessionTime}
 📅 Date : ${formattedDate}
 
-Votre QR Code : ${qrUrl}
+${qrCodes.length > 1 ? 'Vos QR Codes :' : 'Votre QR Code :'}
+${qrCodes.map(qr => `${qrCodes.length > 1 ? `Billet ${qr.ticketNumber}: ` : ''}${qr.qrUrl}`).join('\n')}
 
 ⚠️ INFORMATIONS IMPORTANTES :
-- Vous trouverez ci-joint votre ticket de réservation à présenter le jour de l'événement (version imprimée ou numérique acceptée).
-- Un QR code est inclus pour validation à l'entrée.
-- Merci d'apporter ce ticket le jour de la séance.
-- Ce billet est nominatif et non remboursable après validation.
+- Vous trouverez ci-dessus ${qrCodes.length > 1 ? 'vos tickets de réservation' : 'votre ticket de réservation'} à présenter le jour de l'événement (version imprimée ou numérique acceptée).
+- ${qrCodes.length > 1 ? 'Chaque QR code correspond à une place et doit être' : 'Le QR code doit être'} scanné individuellement pour validation à l'entrée.
+- Merci d'apporter ${qrCodes.length > 1 ? 'ces tickets' : 'ce ticket'} le jour de la séance.
+- ${qrCodes.length > 1 ? 'Ces billets sont nominatifs et non remboursables' : 'Ce billet est nominatif et non remboursable'} après validation.
 
 "Tant que le Soleil Brille" ☀️ – Un instant d'écriture et de partage.
 
