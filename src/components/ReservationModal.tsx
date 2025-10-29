@@ -121,7 +121,7 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
       const event = events[0];
       // Pre-open a tab to avoid popup blockers in iframe environments
       const paymentWindow = typeof window !== 'undefined'
-        ? window.open('', '_blank', 'noopener,noreferrer')
+        ? window.open('', '_blank') // no noopener to keep reference
         : null;
 
       // Create checkout session
@@ -152,28 +152,48 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
         let opened = false;
         try {
           if (paymentWindow && !paymentWindow.closed) {
-            paymentWindow.location.href = sessionData.url;
-            paymentWindow.focus();
-            opened = true;
-          } else if (window.top) {
-            (window.top as Window).location.href = sessionData.url;
-            opened = true;
-          } else {
-            window.location.href = sessionData.url;
+            // Try to navigate the pre-opened tab
+            paymentWindow.location.replace(sessionData.url);
             opened = true;
           }
         } catch (_) {
-          // ignored, will try anchor fallback below
+          // ignore and try other strategies
         }
 
         if (!opened) {
-          const a = document.createElement('a');
-          a.href = sessionData.url;
-          a.target = '_blank';
-          a.rel = 'noopener';
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
+          try {
+            if (window.top) {
+              (window.top as Window).location.href = sessionData.url;
+              opened = true;
+            } else {
+              window.location.href = sessionData.url;
+              opened = true;
+            }
+          } catch (_) {
+            // ignore and use last fallback
+          }
+        }
+
+        if (!opened) {
+          // Write a manual clickable fallback into the pre-opened window
+          if (paymentWindow && !paymentWindow.closed) {
+            paymentWindow.document.title = 'Redirection vers Stripe';
+            paymentWindow.document.body.innerHTML = `
+              <div style="font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; padding: 24px;">
+                <h1>Ouverture du paiement…</h1>
+                <p>Si vous n'êtes pas redirigé automatiquement, cliquez ci-dessous :</p>
+                <p><a href="${sessionData.url}" target="_self" rel="noreferrer noopener" style="font-weight:600;">Continuer vers Stripe</a></p>
+              </div>
+            `;
+          } else {
+            const a = document.createElement('a');
+            a.href = sessionData.url;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          }
         }
 
         toast({
