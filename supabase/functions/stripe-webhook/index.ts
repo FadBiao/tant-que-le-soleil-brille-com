@@ -298,6 +298,115 @@ L'équipe Tant que le Soleil Brille
       } else {
         console.log('Confirmation email sent to:', order.user_email);
       }
+
+      // Get updated session information for organizer email
+      const { data: allSessions, error: sessionsError } = await supabase
+        .from('event_sessions')
+        .select('*')
+        .eq('event_id', order.event_id)
+        .order('start_time');
+
+      if (!sessionsError && allSessions) {
+        // Build session availability info
+        const sessionInfo = allSessions.map(session => {
+          const remainingPlaces = session.capacity - session.booked_count;
+          return `
+            <tr style="border-bottom: 1px solid #e0e0e0;">
+              <td style="padding: 12px;">${session.session_name}</td>
+              <td style="padding: 12px;">${session.start_time.slice(0, 5)} - ${session.end_time.slice(0, 5)}</td>
+              <td style="padding: 12px; text-align: center;">${remainingPlaces} / ${session.capacity}</td>
+              <td style="padding: 12px; text-align: center;">
+                <span style="background-color: ${remainingPlaces > 5 ? '#4CAF50' : remainingPlaces > 0 ? '#FF9800' : '#F44336'}; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px;">
+                  ${remainingPlaces > 5 ? 'Disponible' : remainingPlaces > 0 ? 'Bientôt complet' : 'Complet'}
+                </span>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        // Create organizer email
+        const organizerEmailHtml = `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 700px; margin: 0 auto; padding: 20px; }
+                .header { text-align: center; padding: 20px; background: linear-gradient(135deg, #FDB022 0%, #FF8A3D 100%); color: white; border-radius: 10px 10px 0 0; }
+                .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+                .booking-details { background: white; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #4CAF50; }
+                .sessions-table { width: 100%; border-collapse: collapse; background: white; margin: 20px 0; border-radius: 5px; overflow: hidden; }
+                .sessions-table th { background: #FDB022; color: white; padding: 12px; text-align: left; }
+                .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; padding: 20px; background: #f9f9f9; border-radius: 5px; }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h1>🎉 Nouvelle Réservation Confirmée !</h1>
+                </div>
+                <div class="content">
+                  <div class="booking-details">
+                    <h3>📋 Détails de la réservation</h3>
+                    <p><strong>Participant :</strong> ${order.user_first_name || ''} ${order.user_name}</p>
+                    <p><strong>Email :</strong> ${order.user_email}</p>
+                    <p><strong>Téléphone :</strong> ${order.user_phone || 'Non renseigné'}</p>
+                    <p><strong>Séance réservée :</strong> ${sessionName}</p>
+                    <p><strong>Horaire :</strong> ${sessionTime}</p>
+                    <p><strong>Nombre de places :</strong> ${order.quantity || 1}</p>
+                    <p><strong>Montant payé :</strong> ${(order.amount_cents / 100).toFixed(2)} €</p>
+                    <p><strong>Date de réservation :</strong> ${new Date().toLocaleDateString('fr-FR', { 
+                      weekday: 'long', 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}</p>
+                  </div>
+
+                  <h3>📊 Disponibilité des séances (${formattedDate})</h3>
+                  <table class="sessions-table">
+                    <thead>
+                      <tr>
+                        <th>Séance</th>
+                        <th>Horaire</th>
+                        <th style="text-align: center;">Places restantes</th>
+                        <th style="text-align: center;">Statut</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${sessionInfo}
+                    </tbody>
+                  </table>
+
+                  <p style="text-align: center; font-size: 18px; color: #FDB022; margin: 30px 0;">
+                    ☀️ Un email de confirmation avec QR code${qrCodes.length > 1 ? 's' : ''} a été envoyé au participant.
+                  </p>
+                </div>
+                
+                <div class="footer">
+                  <p>© ${new Date().getFullYear()} Tant que le Soleil Brille - Notification automatique</p>
+                </div>
+              </div>
+            </body>
+          </html>
+        `;
+
+        // Send email to organizer
+        const { error: organizerEmailError } = await resend.emails.send({
+          from: 'Tant que le Soleil Brille <info@tantquelesoleilbrille.com>',
+          to: ['tantquelesoleilbrille@gmail.com'],
+          subject: `✅ Nouvelle inscription - ${order.user_first_name || ''} ${order.user_name} - ${sessionName}`,
+          html: organizerEmailHtml,
+        });
+
+        if (organizerEmailError) {
+          console.error('Organizer email error:', organizerEmailError);
+        } else {
+          console.log('Organizer notification email sent');
+        }
+      }
     }
 
     return new Response(JSON.stringify({ received: true }), {
