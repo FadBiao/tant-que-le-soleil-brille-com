@@ -1,4 +1,5 @@
-import { Sun, Instagram, Facebook, Youtube } from "lucide-react";
+import { Instagram, Facebook, Youtube } from "lucide-react";
+import logo from "@/assets/logo-sun.png";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -10,7 +11,7 @@ const Footer = () => {
           {/* Logo & Description */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <Sun className="h-8 w-8 text-primary" />
+              <img src={logo} alt="Tant que le Soleil Brille" className="h-8 w-8 object-contain brightness-0 invert" />
               <span className="font-playfair text-xl font-bold">
                 Tant que le Soleil Brille
               </span>
