@@ -45,7 +45,6 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
   const [sessions, setSessions] = useState<any[]>([]);
   const [selectedSession, setSelectedSession] = useState<any>(null);
   const [eventPrice, setEventPrice] = useState<number>(65);
-  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
 
   const form = useForm<ReservationFormValues>({
     resolver: zodResolver(reservationSchema),
@@ -100,7 +99,6 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
 
   const onSubmit = async (data: ReservationFormValues) => {
     setIsSubmitting(true);
-    setCheckoutUrl(null);
     
     try {
       toast({
@@ -121,8 +119,6 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
       }
 
       const event = events[0];
-      // Pre-open a tab to avoid popup blockers in iframe environments
-      // Note: pas d'ouverture d'onglet à l'avance pour éviter un onglet blanc en sandbox
 
       // Create checkout session
       const { data: sessionData, error: sessionError } = await supabase.functions.invoke(
@@ -147,13 +143,19 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
 
       console.log('Checkout session response:', sessionData);
 
-      // In iframe contexts, prefer showing a user-clickable link instead of auto-redirects
+      // Open Stripe Checkout in a new tab (required because Lovable preview is in iframe)
       if (sessionData.url) {
-        setCheckoutUrl(sessionData.url);
+        console.log('Opening Stripe in new tab:', sessionData.url);
+        window.open(sessionData.url, '_blank');
+        
         toast({
-          title: "Lien de paiement prêt",
-          description: "Cliquez sur \"Ouvrir le paiement Stripe\" pour continuer dans un nouvel onglet.",
+          title: "✅ Paiement ouvert",
+          description: "Complétez votre paiement dans le nouvel onglet",
         });
+        
+        // Close modal and reset form
+        onOpenChange(false);
+        form.reset();
         setIsSubmitting(false);
       } else {
         throw new Error('URL de paiement non disponible');
@@ -355,28 +357,11 @@ export const ReservationModal = ({ open, onOpenChange }: ReservationModalProps) 
               </>
             )}
 
-            {checkoutUrl && (
-              <div className="p-4 bg-muted rounded-md border border-border space-y-3">
-                <Button asChild size="lg" className="w-full bg-gradient-sun shadow-glow">
-                  <a href={checkoutUrl} target="_blank" rel="noopener noreferrer">
-                    Ouvrir le paiement Stripe
-                  </a>
-                </Button>
-                <p className="text-xs text-muted-foreground">
-                  Si un bloqueur empêche l'ouverture, copiez ce lien et ouvrez-le dans un nouvel onglet :
-                  <br />
-                  <a href={checkoutUrl} target="_blank" rel="noopener noreferrer" className="underline break-all">
-                    {checkoutUrl}
-                  </a>
-                </p>
-              </div>
-            )}
-
             <Button
               type="submit"
               className="w-full bg-gradient-sun shadow-glow"
               size="lg"
-              disabled={isSubmitting || !!checkoutUrl}
+              disabled={isSubmitting}
             >
               {isSubmitting ? "Réservation en cours..." : "Confirmer ma Réservation"}
             </Button>
