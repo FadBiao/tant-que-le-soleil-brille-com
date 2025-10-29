@@ -8,8 +8,7 @@ const BookSection = () => {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Book Image */}
           <div className="relative animate-fade-in">
-            <div className="absolute -inset-4 bg-gradient-sun opacity-20 blur-3xl rounded-full"></div>
-            <img src={bookCover} alt="Tant que le Soleil Brille - Le Livre" className="relative rounded-2xl shadow-soft hover:shadow-glow transition-shadow duration-300 w-full max-w-lg mx-auto scale-110" />
+            <img src={bookCover} alt="Tant que le Soleil Brille - Le Livre" className="w-full max-w-lg mx-auto scale-110" />
           </div>
 
           {/* Book Content */}
