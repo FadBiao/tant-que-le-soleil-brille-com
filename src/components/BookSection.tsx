@@ -16,7 +16,7 @@ const BookSection = () => {
             <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-foreground">
               Le Livre
               <br />
-              <span className="text-foreground">Tant que le Soleil Brille</span>
+              <span className="text-[hsl(var(--navbar-bg))]">Tant que le Soleil Brille</span>
             </h2>
 
             <p className="font-poppins text-lg font-bold text-muted-foreground mb-6 leading-relaxed">Ce recueille n'est pas là pour t'endormir il est là pour te réveiller.</p>
