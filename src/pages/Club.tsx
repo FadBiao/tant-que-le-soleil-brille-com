@@ -32,7 +32,7 @@ const Club = () => {
             <h2 className="font-playfair text-2xl md:text-3xl font-semibold mb-4 text-[hsl(var(--navbar-bg))]">
               Écrire, ressentir, guérir
             </h2>
-            <p className="font-poppins text-lg text-[hsl(0,0%,0%)] max-w-3xl mx-auto mb-4">
+            <p className="font-poppins grid md:grid-cols-2 gap-12 items-start mb-16 text-sm italic text-[hsl(0,0%,0%)] max-w-3xl mx-auto">
               Parce que parfois, il faut juste une matinée, un carnet et quelques âmes lumineuses pour remettre du sens là où y en a plus.
             </p>
             <p className="font-poppins text-base text-[hsl(0,0%,0%)] max-w-3xl mx-auto">
