@@ -13,7 +13,7 @@ const BookSection = () => {
 
           {/* Book Content */}
           <div className="animate-fade-in">
-            <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-foreground">
+            <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-[hsl(0,0%,0%)]">
               Le Livre
               <br />
               <span className="text-[hsl(var(--navbar-bg))]">Tant que le Soleil Brille</span>
