@@ -9,7 +9,7 @@ const ClubSection = () => {
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
-          <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-foreground">
+          <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-[hsl(0,0%,0%)]">
             Le Club Soleil sur toi
           </h2>
           <h3 className="font-playfair text-2xl md:text-3xl font-semibold mb-4 text-[hsl(var(--navbar-bg))]">
