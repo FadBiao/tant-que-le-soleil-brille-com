@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Calendar, Users, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import clubReading from "@/assets/club-reading.jpg";
+import clubReading from "@/assets/club-room-new.png";
 
 const ClubSection = () => {
   return (
