@@ -115,8 +115,7 @@ export default {
         "float": "float 3s ease-in-out infinite",
       },
       fontFamily: {
-        'playfair': ['Playfair Display', 'serif'],
-        'poppins': ['Poppins', 'sans-serif'],
+        'sans': ['Inter', 'sans-serif'],
       },
     },
   },
