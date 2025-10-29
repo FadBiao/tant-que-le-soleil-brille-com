@@ -21,11 +21,11 @@ const Hero = () => {
       })]} className="h-full w-full">
           <CarouselContent className="h-full">
             {heroImages.map((image, index) => <CarouselItem key={index} className="h-full">
-                <div className="h-full w-full relative">
+                <div className="h-full w-full relative bg-background">
                   <img 
                     src={image} 
                     alt={`Hero ${index + 1}`}
-                    className="w-full h-full object-cover object-center"
+                    className="w-full h-full object-contain"
                   />
                 </div>
               </CarouselItem>)}
