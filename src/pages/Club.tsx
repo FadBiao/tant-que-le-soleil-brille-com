@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar, Users, Heart, Ticket, ArrowLeft, ShoppingBag, Pen, BookOpen, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -8,6 +8,11 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 const Club = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   return <div className="min-h-screen font-poppins">
       <Navbar />
       
