@@ -21,7 +21,7 @@ const BookSection = () => {
 
             <p className="font-poppins text-lg font-bold text-[hsl(0,0%,0%)] mb-6 leading-relaxed">Ce recueille n'est pas là pour t'endormir il est là pour te réveiller.</p>
 
-            <p className="font-poppins text-base italic text-justify text-[hsl(0,0%,0%)] mb-6 leading-relaxed mr-0 pr-0">Tant que le soleil brille n'est pas un simple recueil de poésie. C'est une conversation entre ton cœur et la lumière que tu avais oubliée. Des mots vrais, écrits pour te relever, et te rappeler que la foi en toi liée à l'action change tout. Des milliers de lecteurs à travers le monde y ont trouvé un souffle nouveau. Aujourd'hui, c'est ton tour.</p>
+            <p className="font-poppins text-base italic text-justify text-[hsl(0,0%,0%)] mb-6 leading-relaxed mr-12">Tant que le soleil brille n'est pas un simple recueil de poésie. C'est une conversation entre ton cœur et la lumière que tu avais oubliée. Des mots vrais, écrits pour te relever, et te rappeler que la foi en toi liée à l'action change tout. Des milliers de lecteurs à travers le monde y ont trouvé un souffle nouveau. Aujourd'hui, c'est ton tour.</p>
 
             {/* Testimonials */}
             
