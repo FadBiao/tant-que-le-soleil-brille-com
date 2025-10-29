@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingCart, Star, Quote } from "lucide-react";
-import bookCover from "@/assets/book-cover-orange.jpg";
+import bookCover from "@/assets/book-cover-orange-nobg.png";
 const BookSection = () => {
   return <section id="livre" className="py-24 bg-background">
       <div className="container mx-auto px-4">
@@ -9,7 +9,7 @@ const BookSection = () => {
           {/* Book Image */}
           <div className="relative animate-fade-in">
             <div className="absolute -inset-4 bg-gradient-sun opacity-20 blur-3xl rounded-full"></div>
-            <img src={bookCover} alt="Tant que le Soleil Brille - Le Livre" className="relative rounded-2xl shadow-soft hover:shadow-glow transition-shadow duration-300" />
+            <img src={bookCover} alt="Tant que le Soleil Brille - Le Livre" className="relative rounded-2xl shadow-soft hover:shadow-glow transition-shadow duration-300 w-full max-w-lg mx-auto scale-110" />
           </div>
 
           {/* Book Content */}
