@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingCart, Star, Quote } from "lucide-react";
-import bookCover from "@/assets/book-cover.jpg";
+import bookCover from "@/assets/book-cover-orange.jpg";
 const BookSection = () => {
   return <section id="livre" className="py-24 bg-background">
       <div className="container mx-auto px-4">
