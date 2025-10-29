@@ -9,8 +9,9 @@ import heroPodcasts from "@/assets/hero-podcasts.png";
 import heroWalking from "@/assets/hero-walking.jpeg";
 import heroBookItems from "@/assets/hero-book-items.jpg";
 import heroBanner from "@/assets/hero-banner.jpeg";
+import heroFlowers from "@/assets/hero-flowers.jpg";
 const Hero = () => {
-  const heroImages = [heroClubRoom, heroIbbyCollage, heroBooks, heroPodcasts, heroWalking, heroBookItems, heroBanner];
+  const heroImages = [heroClubRoom, heroIbbyCollage, heroBooks, heroPodcasts, heroWalking, heroBookItems, heroBanner, heroFlowers];
   return <section id="accueil" className="relative min-h-[calc(100vh-var(--nav-h))] mt-[var(--nav-h)] flex items-center justify-center overflow-hidden">
       {/* Background Carousel with Overlay */}
       <div className="absolute inset-0">
