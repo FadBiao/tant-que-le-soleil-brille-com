@@ -38,7 +38,7 @@ const PodcastCard = ({ title, image, spotifyUrl, themes }: PodcastCardProps) => 
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent opacity-80"></div>
-        <div className="absolute top-3 right-3 bg-primary text-primary-foreground text-xs font-poppins px-3 py-1 rounded-full">
+        <div className="absolute top-3 right-3 bg-[hsl(var(--navbar-bg))] text-white text-xs font-poppins px-3 py-1 rounded-full">
           {themes[0]}
         </div>
       </div>
@@ -52,7 +52,7 @@ const PodcastCard = ({ title, image, spotifyUrl, themes }: PodcastCardProps) => 
           {themes.map((theme, index) => (
             <span 
               key={index}
-              className="text-xs font-poppins px-2 py-1 rounded-full bg-primary/10 text-primary"
+              className="text-xs font-poppins px-2 py-1 rounded-full bg-[hsl(var(--navbar-bg))]/10 text-[hsl(var(--navbar-bg))]"
             >
               {theme}
             </span>
@@ -63,7 +63,7 @@ const PodcastCard = ({ title, image, spotifyUrl, themes }: PodcastCardProps) => 
           <Button 
             variant="default" 
             size="sm" 
-            className="flex-1 bg-gradient-sun"
+            className="flex-1 bg-[hsl(var(--navbar-bg))] hover:bg-[hsl(var(--navbar-bg))]/90 text-white"
             onClick={handleListen}
           >
             <Play className="mr-2 h-4 w-4" />

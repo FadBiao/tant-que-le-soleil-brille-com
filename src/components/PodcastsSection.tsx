@@ -29,7 +29,7 @@ const PodcastsSection = () => {
 
         {/* Theme Filters */}
         <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {themes.map(theme => <Button key={theme} variant={selectedTheme === theme ? "default" : "outline"} onClick={() => setSelectedTheme(theme)} className={selectedTheme === theme ? "bg-gradient-sun shadow-glow" : ""}>
+          {themes.map(theme => <Button key={theme} variant={selectedTheme === theme ? "default" : "outline"} onClick={() => setSelectedTheme(theme)} className={selectedTheme === theme ? "bg-[hsl(var(--navbar-bg))] hover:bg-[hsl(var(--navbar-bg))]/90 text-white" : ""}>
               {theme}
             </Button>)}
         </div>
@@ -45,7 +45,7 @@ const PodcastsSection = () => {
         {filteredPodcasts.length > 6 && (
           <div className="flex justify-center mt-12">
             <Link to="/podcasts">
-              <Button size="lg" className="bg-gradient-sun shadow-glow">
+              <Button size="lg" className="bg-[hsl(var(--navbar-bg))] hover:bg-[hsl(var(--navbar-bg))]/90 text-white">
                 Voir tous les podcasts
               </Button>
             </Link>
