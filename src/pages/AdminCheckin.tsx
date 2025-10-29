@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
-import { Home } from "lucide-react";
+import { Home, Camera, X } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
+import { Html5Qrcode } from "html5-qrcode";
 
 interface VerificationResult {
   valid: boolean;
@@ -34,6 +35,8 @@ const AdminCheckin = () => {
   const [token, setToken] = useState("");
   const [result, setResult] = useState<VerificationResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const scannerRef = useRef<Html5Qrcode | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,10 +73,59 @@ const AdminCheckin = () => {
     checkAuth();
   }, [navigate]);
 
-  const handleVerify = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!token.trim()) {
+  const startScanning = async () => {
+    try {
+      setScanning(true);
+      setResult(null);
+      
+      const scanner = new Html5Qrcode("qr-reader");
+      scannerRef.current = scanner;
+
+      await scanner.start(
+        { facingMode: "environment" },
+        {
+          fps: 10,
+          qrbox: { width: 250, height: 250 }
+        },
+        async (decodedText) => {
+          // Extract token from URL or use text directly
+          let extractedToken = decodedText;
+          try {
+            const url = new URL(decodedText);
+            extractedToken = url.searchParams.get('t') || decodedText;
+          } catch {
+            // Not a URL, use as-is
+          }
+
+          setToken(extractedToken);
+          await stopScanning();
+          await verifyToken(extractedToken);
+        },
+        (errorMessage) => {
+          // Ignore scan errors (no QR code in view)
+        }
+      );
+    } catch (error) {
+      console.error("Scanner error:", error);
+      toast.error("Impossible d'accéder à la caméra");
+      setScanning(false);
+    }
+  };
+
+  const stopScanning = async () => {
+    if (scannerRef.current) {
+      try {
+        await scannerRef.current.stop();
+        scannerRef.current.clear();
+      } catch (error) {
+        console.error("Stop scanner error:", error);
+      }
+    }
+    setScanning(false);
+  };
+
+  const verifyToken = async (tokenToVerify: string) => {
+    if (!tokenToVerify.trim()) {
       toast.error("Veuillez entrer un code de vérification");
       return;
     }
@@ -83,7 +135,7 @@ const AdminCheckin = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke('verify-ticket', {
-        body: { token: token.trim() },
+        body: { token: tokenToVerify.trim() },
       });
 
       if (error) throw error;
@@ -91,9 +143,9 @@ const AdminCheckin = () => {
       setResult(data);
       
       if (data.valid) {
-        toast.success(`Billet valide: ${data.attendee?.name}`);
+        toast.success(`✅ Billet valide: ${data.attendee?.name}`);
       } else {
-        toast.error(`Billet invalide: ${getReasonText(data.reason)}`);
+        toast.error(`❌ Billet invalide: ${getReasonText(data.reason)}`);
       }
     } catch (error) {
       console.error('Verification error:', error);
@@ -101,6 +153,11 @@ const AdminCheckin = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await verifyToken(token);
   };
 
   const getReasonText = (reason: string | null) => {
@@ -152,31 +209,70 @@ const AdminCheckin = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleVerify} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Code de vérification ou Token
-                </label>
-                <Input
-                  type="text"
-                  value={token}
-                  onChange={(e) => setToken(e.target.value)}
-                  placeholder="Entrer le code..."
-                  className="w-full"
-                />
-                <p className="text-xs text-muted-foreground mt-1">
-                  Scannez le QR code ou entrez le token manuellement
+            {!scanning ? (
+              <>
+                <div className="mb-6">
+                  <Button
+                    onClick={startScanning}
+                    className="w-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-lg py-6"
+                  >
+                    <Camera className="w-6 h-6 mr-2" />
+                    Scanner un QR Code
+                  </Button>
+                </div>
+
+                <div className="relative my-6">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                      Ou entrer manuellement
+                    </span>
+                  </div>
+                </div>
+
+                <form onSubmit={handleVerify} className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Code de vérification ou Token
+                    </label>
+                    <Input
+                      type="text"
+                      value={token}
+                      onChange={(e) => setToken(e.target.value)}
+                      placeholder="Entrer le code..."
+                      className="w-full"
+                    />
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600"
+                  >
+                    {loading ? "Vérification..." : "Vérifier le billet"}
+                  </Button>
+                </form>
+              </>
+            ) : (
+              <div className="space-y-4">
+                <div className="relative">
+                  <div id="qr-reader" className="rounded-lg overflow-hidden"></div>
+                  <Button
+                    onClick={stopScanning}
+                    variant="destructive"
+                    className="absolute top-2 right-2"
+                    size="icon"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+                <p className="text-center text-sm text-muted-foreground">
+                  Placez le QR code devant la caméra pour le scanner
                 </p>
               </div>
-
-              <Button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600"
-              >
-                {loading ? "Vérification..." : "Vérifier le billet"}
-              </Button>
-            </form>
+            )}
 
             {result && (
               <Card className={`mt-6 ${result.valid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}`}>
