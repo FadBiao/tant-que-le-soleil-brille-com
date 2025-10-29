@@ -85,7 +85,7 @@ const Footer = () => {
         <div className="container mx-auto px-4">
           {/* Navigation Links */}
           <div className="flex flex-wrap justify-center gap-6 mb-6 font-poppins text-sm">
-            <a href="/#accueil" className="text-[hsl(var(--navbar-bg))] hover:underline uppercase font-medium">
+            <a href="/" className="text-[hsl(var(--navbar-bg))] hover:underline uppercase font-medium">
               Accueil
             </a>
             <a href="/#livre" className="text-[hsl(var(--navbar-bg))] hover:underline uppercase font-medium">
