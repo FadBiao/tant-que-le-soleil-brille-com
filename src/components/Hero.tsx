@@ -10,7 +10,7 @@ import heroBooksOrange from "@/assets/hero-books-orange.png";
 import heroSofaOrange from "@/assets/hero-sofa-orange.png";
 const Hero = () => {
   const heroImages = [heroIbbyCollage, heroPodcasts, heroIbbySign, heroFlowers, heroBooksOrange, heroSofaOrange];
-  return <section id="accueil" className="relative min-h-[35vh] md:min-h-[calc(100vh-var(--nav-h))] mt-[var(--nav-h)] flex items-center justify-center overflow-hidden">
+  return <section id="accueil" className="relative min-h-[30vh] md:min-h-[calc(100vh-var(--nav-h))] mt-[var(--nav-h)] flex items-center justify-center overflow-hidden">
       {/* Background Carousel with Overlay */}
       <div className="absolute inset-0">
         <Carousel 
@@ -45,7 +45,7 @@ const Hero = () => {
       
 
       {/* Decorative Elements */}
-      <div className="absolute bottom-0 left-0 w-full h-16 md:h-32 bg-gradient-to-t from-background to-transparent"></div>
+      <div className="absolute bottom-0 left-0 w-full h-8 md:h-32 bg-gradient-to-t from-background to-transparent"></div>
     </section>;
 };
 export default Hero;
