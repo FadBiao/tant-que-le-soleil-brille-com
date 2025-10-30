@@ -65,10 +65,10 @@ const Club = () => {
                 <CarouselContent>
                   {[club1, club2, club3, club4, club5].map((image, index) => (
                     <CarouselItem key={index}>
-                      <img 
+                       <img 
                         src={image} 
                         alt={`Le Club Soleil sur toi - ${index + 1}`} 
-                        className="rounded-2xl shadow-soft w-full h-auto object-cover aspect-[4/5]" 
+                        className="rounded-2xl shadow-soft w-full max-w-md mx-auto h-auto object-cover aspect-[4/5]" 
                       />
                     </CarouselItem>
                   ))}
