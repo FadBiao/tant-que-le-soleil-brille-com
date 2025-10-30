@@ -7,7 +7,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import club1 from "@/assets/club-1.jpg";
+import clubRoomNew from "@/assets/club-room-new.png";
 import club2 from "@/assets/club-2.jpg";
 import club3 from "@/assets/club-3.jpg";
 import club4 from "@/assets/club-4.jpg";
@@ -63,7 +63,7 @@ const Club = () => {
                 className="w-full"
               >
                 <CarouselContent>
-                  {[club1, club2, club3, club4, club5].map((image, index) => (
+                  {[clubRoomNew, club2, club3, club4, club5].map((image, index) => (
                     <CarouselItem key={index}>
                        <img 
                         src={image} 
