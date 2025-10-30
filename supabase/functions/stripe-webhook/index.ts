@@ -9,6 +9,17 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// HTML escape function to prevent XSS in emails
+function escapeHtml(unsafe: string): string {
+  if (!unsafe) return '';
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 // Generate a secure random QR token
 function generateQRToken(): string {
   const bytes = new Uint8Array(32);
@@ -201,7 +212,7 @@ serve(async (req) => {
           <body>
             <div class="container">
               <div class="header">
-                <h1>☀️ Bonjour ${order.user_first_name || order.user_name} !</h1>
+                <h1>☀️ Bonjour ${escapeHtml(order.user_first_name || order.user_name)} !</h1>
                 <h2>Votre place est bien confirmée !</h2>
               </div>
               <div class="content">
@@ -256,7 +267,7 @@ serve(async (req) => {
       `;
 
       const emailText = `
-Bonjour ${order.user_first_name || order.user_name},
+Bonjour ${escapeHtml(order.user_first_name || order.user_name)},
 
 Merci pour votre réservation au CLUB SOLEIL SUR TOI 🌞
 Votre place est bien confirmée !
@@ -348,9 +359,9 @@ L'équipe Tant que le Soleil Brille
                 <div class="content">
                   <div class="booking-details">
                     <h3>📋 Détails de la réservation</h3>
-                    <p><strong>Participant :</strong> ${order.user_first_name || ''} ${order.user_name}</p>
-                    <p><strong>Email :</strong> ${order.user_email}</p>
-                    <p><strong>Téléphone :</strong> ${order.user_phone || 'Non renseigné'}</p>
+                    <p><strong>Participant :</strong> ${escapeHtml(order.user_first_name || '')} ${escapeHtml(order.user_name)}</p>
+                    <p><strong>Email :</strong> ${escapeHtml(order.user_email)}</p>
+                    <p><strong>Téléphone :</strong> ${escapeHtml(order.user_phone || 'Non renseigné')}</p>
                     <p><strong>Séance réservée :</strong> ${sessionName}</p>
                     <p><strong>Horaire :</strong> ${sessionTime}</p>
                     <p><strong>Nombre de places :</strong> ${order.quantity || 1}</p>
@@ -397,7 +408,7 @@ L'équipe Tant que le Soleil Brille
         const { error: organizerEmailError } = await resend.emails.send({
           from: 'Tant que le Soleil Brille <info@tantquelesoleilbrille.com>',
           to: ['tantquelesoleilbrille@gmail.com'],
-          subject: `✅ Nouvelle inscription - ${order.user_first_name || ''} ${order.user_name} - ${sessionName}`,
+          subject: `✅ Nouvelle inscription - ${escapeHtml(order.user_first_name || '')} ${escapeHtml(order.user_name)} - ${sessionName}`,
           html: organizerEmailHtml,
         });
 
