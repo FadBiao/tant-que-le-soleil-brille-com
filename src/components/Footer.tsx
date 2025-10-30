@@ -105,7 +105,7 @@ const Footer = () => {
           {/* Social Media Icons */}
           <div className="flex justify-center gap-4 mb-6">
             <a 
-              href="https://www.instagram.com/tantquelesoleilbrille?igsh=ZWJwNjRybGpjajQ1" 
+              href="https://www.instagram.com/tantquelesoleilbrille/?igsh=ZWJwNjRybGpjajQ1#" 
               target="_blank"
               rel="noopener noreferrer"
               className="bg-[hsl(var(--navbar-bg))] hover:bg-[hsl(var(--navbar-bg))]/80 text-white p-3 rounded-full transition-colors"
