@@ -26,7 +26,7 @@ const ClubSection = () => {
             <img 
               src={clubReading}
               alt="Le Club Soleil sur toi"
-              className="rounded-2xl shadow-soft hover:shadow-glow transition-shadow duration-300 w-full"
+              className="rounded-2xl shadow-soft hover:shadow-glow transition-shadow duration-300 w-full max-w-md mx-auto"
             />
           </div>
 
