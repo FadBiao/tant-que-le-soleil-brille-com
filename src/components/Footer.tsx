@@ -1,4 +1,4 @@
-import { Instagram, Facebook, Youtube, Send } from "lucide-react";
+import { Instagram, Music, Mic, Send } from "lucide-react";
 import logo from "@/assets/logo-sun.png";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -105,25 +105,31 @@ const Footer = () => {
           {/* Social Media Icons */}
           <div className="flex justify-center gap-4 mb-6">
             <a 
-              href="#" 
+              href="https://www.instagram.com/tantquelesoleilbrille?igsh=ZWJwNjRybGpjajQ1" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="bg-[hsl(var(--navbar-bg))] hover:bg-[hsl(var(--navbar-bg))]/80 text-white p-3 rounded-full transition-colors"
               aria-label="Instagram"
             >
               <Instagram className="h-5 w-5" />
             </a>
             <a 
-              href="#" 
+              href="https://open.spotify.com/show/4Em0fs1GTP0nytKUlzZ02W?si=88c80c1efdd248af" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="bg-[hsl(var(--navbar-bg))] hover:bg-[hsl(var(--navbar-bg))]/80 text-white p-3 rounded-full transition-colors"
-              aria-label="Facebook"
+              aria-label="Spotify"
             >
-              <Facebook className="h-5 w-5" />
+              <Music className="h-5 w-5" />
             </a>
             <a 
-              href="#" 
+              href="https://podcasts.apple.com/fr/podcast/soleil-sur-toi/id1699976384?l=en-GB" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="bg-[hsl(var(--navbar-bg))] hover:bg-[hsl(var(--navbar-bg))]/80 text-white p-3 rounded-full transition-colors"
-              aria-label="Youtube"
+              aria-label="Apple Podcast"
             >
-              <Youtube className="h-5 w-5" />
+              <Mic className="h-5 w-5" />
             </a>
           </div>
 
