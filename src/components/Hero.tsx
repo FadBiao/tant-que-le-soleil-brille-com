@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Headphones, BookOpen, Sparkles } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import heroIbbyCollage from "@/assets/hero-ibby-collage.png";
+import heroIbbyCollage from "@/assets/hero-ibby-collage-new.png";
 import heroPodcasts from "@/assets/hero-podcasts.png";
 import heroIbbySign from "@/assets/hero-ibby-sign.jpg";
 import heroFlowers from "@/assets/hero-flowers.jpg";
