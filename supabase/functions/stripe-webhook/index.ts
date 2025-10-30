@@ -205,7 +205,7 @@ serve(async (req) => {
                 <h2>Votre place est bien confirmée !</h2>
               </div>
               <div class="content">
-                <p>Merci pour votre réservation au Club d'Écriture "Tant que le Soleil Brille" 🌞</p>
+                <p>Merci pour votre réservation au CLUB SOLEIL SUR TOI 🌞</p>
                 
                 <div class="details">
                   <h3>🗓️ Séance choisie : ${sessionName}</h3>
@@ -258,7 +258,7 @@ serve(async (req) => {
       const emailText = `
 Bonjour ${order.user_first_name || order.user_name},
 
-Merci pour votre réservation au Club d'Écriture "Tant que le Soleil Brille" 🌞
+Merci pour votre réservation au CLUB SOLEIL SUR TOI 🌞
 Votre place est bien confirmée !
 
 🗓️ Séance choisie : ${sessionName}
