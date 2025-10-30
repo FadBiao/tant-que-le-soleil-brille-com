@@ -48,7 +48,7 @@ const Club = () => {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12 items-start mb-16">
+          <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
             {/* Left Column - Image Carousel */}
             <div className="animate-fade-in">
               <Carousel
