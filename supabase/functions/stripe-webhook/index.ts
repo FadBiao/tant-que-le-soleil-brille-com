@@ -210,7 +210,7 @@ serve(async (req) => {
                 <div class="details">
                   <h3>🗓️ Séance choisie : ${sessionName}</h3>
                   <p><strong>👥 Nombre de places réservées :</strong> ${order.quantity || 1}</p>
-                  <p><strong>📍 Lieu :</strong> 8 Place de la Gare des Vallées<br/>92250 La Garenne-Colombes</p>
+                  <p><strong>📍 Lieu :</strong> Café Poésie<br/>10 Pass. Thiéré, 75011 Paris</p>
                   <p><strong>🕑 Heure :</strong> ${sessionTime}</p>
                   <p><strong>📅 Date :</strong> ${formattedDate}</p>
                 </div>
@@ -263,7 +263,7 @@ Votre place est bien confirmée !
 
 🗓️ Séance choisie : ${sessionName}
 👥 Nombre de places réservées : ${order.quantity || 1}
-📍 Lieu : 8 Place de la Gare des Vallées, 92250 La Garenne-Colombes
+📍 Lieu : Café Poésie, 10 Pass. Thiéré, 75011 Paris
 🕑 Heure : ${sessionTime}
 📅 Date : ${formattedDate}
 
