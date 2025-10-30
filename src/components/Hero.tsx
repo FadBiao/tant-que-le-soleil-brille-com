@@ -30,7 +30,9 @@ const Hero = () => {
                   <img 
                     src={image} 
                     alt={`Hero ${index + 1}`}
-                    className="w-full h-full object-cover transition-all duration-1000 ease-in-out"
+                    className={`w-full h-full object-cover transition-all duration-1000 ease-in-out ${
+                      index === heroImages.length - 2 ? 'object-top' : ''
+                    }`}
                   />
                 </div>
               </CarouselItem>)}
