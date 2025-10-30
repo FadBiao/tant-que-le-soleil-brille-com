@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingCart, Star, Quote } from "lucide-react";
 import bookCover from "@/assets/book-cover-new.png";
 const BookSection = () => {
-  return <section id="livre" className="py-12 md:py-24 bg-background">
+  return <section id="livre" className="py-6 md:py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Book Image */}
