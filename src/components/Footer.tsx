@@ -1,4 +1,4 @@
-import { Instagram, Music, Mic, Send } from "lucide-react";
+import { Instagram, Radio, Mic, Send } from "lucide-react";
 import logo from "@/assets/logo-sun.png";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -120,7 +120,7 @@ const Footer = () => {
               className="bg-[hsl(var(--navbar-bg))] hover:bg-[hsl(var(--navbar-bg))]/80 text-white p-3 rounded-full transition-colors"
               aria-label="Spotify"
             >
-              <Music className="h-5 w-5" />
+              <Radio className="h-5 w-5" />
             </a>
             <a 
               href="https://podcasts.apple.com/fr/podcast/soleil-sur-toi/id1699976384?l=en-GB" 
