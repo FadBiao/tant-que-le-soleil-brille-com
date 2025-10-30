@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-import { Mail, Send, Sun } from "lucide-react";
+import { Mail, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import logoSun from "@/assets/logo-sun.png";
 
 const contactSchema = z.object({
   name: z.string()
@@ -64,7 +65,7 @@ const Contact = () => {
     <section id="contact" className="py-24 bg-gradient-dawn">
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="text-center mb-12 animate-fade-in">
-          <Sun className="h-12 w-12 text-[hsl(var(--navbar-bg))] mx-auto mb-4 animate-float" />
+          <img src={logoSun} alt="Logo Tournesol" className="h-12 w-12 mx-auto mb-4 animate-float" />
           <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4 text-foreground">
             Restons en Contact
           </h2>
