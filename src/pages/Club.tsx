@@ -2,10 +2,16 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar, Users, Heart, Ticket, ArrowLeft, ShoppingBag, Pen, BookOpen, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
-import clubReading from "@/assets/club-reading.jpg";
 import { ReservationModal } from "@/components/ReservationModal";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import club1 from "@/assets/club-1.jpg";
+import club2 from "@/assets/club-2.jpg";
+import club3 from "@/assets/club-3.jpg";
+import club4 from "@/assets/club-4.jpg";
+import club5 from "@/assets/club-5.png";
 const Club = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   
@@ -43,9 +49,31 @@ const Club = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-12 items-start mb-16">
-            {/* Left Column - Image */}
+            {/* Left Column - Image Carousel */}
             <div className="animate-fade-in">
-              <img src={clubReading} alt="Le Club Soleil sur toi" className="rounded-2xl shadow-soft hover:shadow-glow transition-shadow duration-300 w-full" />
+              <Carousel
+                opts={{ loop: true }}
+                plugins={[
+                  Autoplay({
+                    delay: 4500,
+                    stopOnInteraction: true,
+                    stopOnMouseEnter: true,
+                  }),
+                ]}
+                className="w-full"
+              >
+                <CarouselContent>
+                  {[club1, club2, club3, club4, club5].map((image, index) => (
+                    <CarouselItem key={index}>
+                      <img 
+                        src={image} 
+                        alt={`Le Club Soleil sur toi - ${index + 1}`} 
+                        className="rounded-2xl shadow-soft w-full h-auto object-cover aspect-[4/5]" 
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
             </div>
 
             {/* Right Column - Ce qui t'attend */}
