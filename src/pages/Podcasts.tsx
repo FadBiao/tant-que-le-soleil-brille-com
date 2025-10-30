@@ -4,9 +4,24 @@ import Footer from "@/components/Footer";
 import PodcastCard from "@/components/PodcastCard";
 import { Button } from "@/components/ui/button";
 import { allPodcasts, themes } from "@/data/podcastsData";
+import SEO from "@/components/SEO";
+import StructuredData from "@/components/StructuredData";
 
 const Podcasts = () => {
   const [selectedTheme, setSelectedTheme] = useState("Tous les topics");
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "PodcastSeries",
+    "name": "Soleil sur toi",
+    "description": "Des podcasts sur le développement personnel, la confiance en soi, les relations et le bonheur. Portés par la joie et la bonne humeur d'Ibby.",
+    "url": "https://tantquelesoleilbrille.com/podcasts",
+    "author": {
+      "@type": "Person",
+      "name": "Ibtissam Madani"
+    },
+    "genre": ["Développement personnel", "Motivation", "Santé mentale"]
+  };
 
   // Get unique podcasts (avoid duplicates)
   const uniquePodcasts = allPodcasts.filter((podcast, index, self) =>
@@ -18,8 +33,15 @@ const Podcasts = () => {
     : uniquePodcasts.filter(p => p.themes.includes(selectedTheme));
 
   return (
-    <div className="min-h-screen font-poppins">
-      <Navbar />
+    <>
+      <SEO 
+        title="Tous les Podcasts Soleil sur toi | Tant que le Soleil Brille"
+        description="Découvrez tous les épisodes du podcast Soleil sur toi : développement personnel, confiance en soi, relations, bonheur et motivation. Écoutez gratuitement sur Spotify."
+        keywords="podcast développement personnel, motivation, confiance en soi, santé mentale, relations, bonheur, podcast gratuit"
+      />
+      <StructuredData data={structuredData} />
+      <div className="min-h-screen font-poppins">
+        <Navbar />
       
       <section className="pt-32 pb-24 bg-gradient-dawn min-h-screen">
         <div className="container mx-auto px-4">
@@ -72,8 +94,9 @@ const Podcasts = () => {
         </div>
       </section>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </>
   );
 };
 

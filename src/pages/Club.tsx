@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { ReservationModal } from "@/components/ReservationModal";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
+import StructuredData from "@/components/StructuredData";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import clubRoomNew from "@/assets/club-room-new.png";
@@ -12,15 +14,58 @@ import club2 from "@/assets/club-2.jpg";
 import club3 from "@/assets/club-3.jpg";
 import club4 from "@/assets/club-4.jpg";
 import club5 from "@/assets/club-5.png";
+
 const Club = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "Le Club Soleil sur toi",
+    "description": "Atelier d'écriture introspective et de guérison émotionnelle. Un moment suspendu pour écrire, ressentir et guérir.",
+    "startDate": "2025-11-16T10:00:00+01:00",
+    "endDate": "2025-11-16T13:30:00+01:00",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "location": {
+      "@type": "Place",
+      "name": "Café Poésie",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "10 Pass. Thiéré",
+        "addressLocality": "Paris",
+        "postalCode": "75011",
+        "addressCountry": "FR"
+      }
+    },
+    "organizer": {
+      "@type": "Person",
+      "name": "Ibtissam Madani"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "65",
+      "priceCurrency": "EUR",
+      "availability": "https://schema.org/InStock",
+      "url": "https://tantquelesoleilbrille.com/club"
+    }
+  };
   
-  return <div className="min-h-screen font-poppins">
-      <Navbar />
+  return (
+    <>
+      <SEO 
+        title="Club Soleil sur toi - Atelier d'Écriture et Guérison | Tant que le Soleil Brille"
+        description="Rejoignez le Club Soleil sur toi : un atelier d'écriture introspective pour explorer vos émotions, guérir par les mots et vous reconnecter à vous-même. Sessions à Paris 11e."
+        keywords="atelier d'écriture, écriture thérapeutique, développement personnel Paris, club d'écriture, guérison émotionnelle, introspection"
+        type="article"
+      />
+      <StructuredData data={structuredData} />
+      <div className="min-h-screen font-poppins">
+        <Navbar />
       
       <section className="py-24 bg-gradient-dawn">
         <div className="container mx-auto px-4 max-w-6xl">
@@ -63,15 +108,24 @@ const Club = () => {
                 className="w-full"
               >
                 <CarouselContent>
-                  {[clubRoomNew, club2, club3, club4, club5].map((image, index) => (
-                    <CarouselItem key={index}>
-                       <img 
-                        src={image} 
-                        alt={`Le Club Soleil sur toi - ${index + 1}`} 
-                        className="rounded-2xl shadow-soft w-full max-w-md mx-auto h-auto object-cover aspect-[4/5]" 
-                      />
-                    </CarouselItem>
-                  ))}
+                  {[clubRoomNew, club2, club3, club4, club5].map((image, index) => {
+                    const altTexts = [
+                      "Salle accueillante du Club Soleil sur toi pour l'atelier d'écriture thérapeutique",
+                      "Participants du Club Soleil sur toi lors d'une session d'écriture introspective",
+                      "Ambiance chaleureuse et inspirante du Club d'écriture Soleil sur toi",
+                      "Moment de partage et d'écriture au Club Soleil sur toi",
+                      "Matériel d'écriture et décoration du Club Soleil sur toi"
+                    ];
+                    return (
+                      <CarouselItem key={index}>
+                        <img 
+                          src={image} 
+                          alt={altTexts[index]} 
+                          className="rounded-2xl shadow-soft w-full max-w-md mx-auto h-auto object-cover aspect-[4/5]" 
+                        />
+                      </CarouselItem>
+                    );
+                  })}
                 </CarouselContent>
               </Carousel>
             </div>
@@ -260,7 +314,9 @@ const Club = () => {
         </div>
       </section>
 
-      <Footer />
-    </div>;
+        <Footer />
+      </div>
+    </>
+  );
 };
 export default Club;

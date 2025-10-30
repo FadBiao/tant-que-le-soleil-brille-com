@@ -25,7 +25,7 @@ const ClubSection = () => {
           <div className="animate-fade-in">
             <img 
               src={clubReading}
-              alt="Le Club Soleil sur toi"
+              alt="Atelier d'écriture Club Soleil sur toi - Espace chaleureux et inspirant pour l'écriture thérapeutique à Paris"
               className="rounded-2xl shadow-soft hover:shadow-glow transition-shadow duration-300 w-full max-w-md mx-auto"
             />
           </div>

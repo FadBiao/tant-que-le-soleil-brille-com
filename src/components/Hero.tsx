@@ -25,17 +25,29 @@ const Hero = () => {
           className="h-full w-full"
         >
           <CarouselContent className="h-full">
-            {heroImages.map((image, index) => <CarouselItem key={index} className="h-full">
-                <div className="h-full w-full relative bg-background transition-opacity duration-1000 ease-in-out">
-                  <img 
-                    src={image} 
-                    alt={`Hero ${index + 1}`}
-                    className={`w-full h-full object-cover transition-all duration-1000 ease-in-out ${
-                      index === heroImages.length - 2 ? 'object-top' : ''
-                    }`}
-                  />
-                </div>
-              </CarouselItem>)}
+            {heroImages.map((image, index) => {
+              const altTexts = [
+                "Ibtissam Madani auteure de Tant que le Soleil Brille",
+                "Podcasts Soleil sur toi - Développement personnel",
+                "Enseigne Tant que le Soleil Brille",
+                "Atmosphère inspirante et poétique",
+                "Livres et poésie inspirants",
+                "Espace chaleureux du Club Soleil sur toi"
+              ];
+              return (
+                <CarouselItem key={index} className="h-full">
+                  <div className="h-full w-full relative bg-background transition-opacity duration-1000 ease-in-out">
+                    <img 
+                      src={image} 
+                      alt={altTexts[index]}
+                      className={`w-full h-full object-cover transition-all duration-1000 ease-in-out ${
+                        index === heroImages.length - 2 ? 'object-top' : ''
+                      }`}
+                    />
+                  </div>
+                </CarouselItem>
+              );
+            })}
           </CarouselContent>
         </Carousel>
         <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/20 to-transparent pointer-events-none"></div>

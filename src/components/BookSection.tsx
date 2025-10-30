@@ -2,13 +2,51 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingCart, Star, Quote } from "lucide-react";
 import bookCover from "@/assets/book-cover-new.png";
+
 const BookSection = () => {
+  const bookStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Book",
+    "name": "Tant que le Soleil Brille",
+    "author": {
+      "@type": "Person",
+      "name": "Ibtissam Madani"
+    },
+    "description": "Tant que le soleil brille n'est pas un simple recueil de poésie. C'est une conversation entre ton cœur et la lumière que tu avais oubliée. Des mots vrais, écrits pour te relever, et te rappeler que la foi en toi liée à l'action change tout.",
+    "isbn": "2322522988",
+    "bookFormat": "Paperback",
+    "inLanguage": "fr",
+    "offers": {
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "price": "14.90",
+      "priceCurrency": "EUR",
+      "url": "https://www.amazon.fr/Tant-soleil-brille-Ibtissam-Madani/dp/2322522988"
+    }
+  };
+
+  // Add structured data to the page
+  if (typeof window !== 'undefined') {
+    const script = document.getElementById('book-structured-data');
+    if (!script) {
+      const newScript = document.createElement('script');
+      newScript.id = 'book-structured-data';
+      newScript.type = 'application/ld+json';
+      newScript.text = JSON.stringify(bookStructuredData);
+      document.head.appendChild(newScript);
+    }
+  }
+
   return <section id="livre" className="pt-0 pb-2 md:py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Book Image */}
           <div className="relative animate-fade-in">
-            <img src={bookCover} alt="Tant que le Soleil Brille - Le Livre" className="w-full max-w-md mx-auto" />
+            <img 
+              src={bookCover} 
+              alt="Couverture du livre Tant que le Soleil Brille par Ibtissam Madani - Recueil de poésie inspirante et développement personnel" 
+              className="w-full max-w-md mx-auto" 
+            />
           </div>
 
           {/* Book Content */}
