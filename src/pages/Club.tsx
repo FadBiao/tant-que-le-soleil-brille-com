@@ -204,7 +204,7 @@ const Club = () => {
                   <div>
                     <p className="font-poppins font-semibold text-[hsl(0,0%,0%)]">Dimanche 16 novembre 2025</p>
                     <p className="font-poppins text-sm text-[hsl(0,0%,0%)]">
-                      Créneau : 10h00-11h30 / 12h-13h30
+                      Créneau : 10h00-11h30 / 11h45-13h15
                     </p>
                   </div>
                 </div>
