@@ -53,7 +53,7 @@ const ClubSection = () => {
                 </div>
               </div>
               <div className="mt-4 pt-4 border-t border-border">
-                <p className="font-poppins text-2xl font-bold text-[hsl(var(--navbar-bg))]">65 €</p>
+                <p className="font-poppins text-2xl font-bold text-[hsl(var(--navbar-bg))]">35 €</p>
                 <p className="font-poppins text-xs text-[hsl(0,0%,0%)]">Carnet, boisson chaude et douceurs inclus</p>
               </div>
             </div>

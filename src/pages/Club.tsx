@@ -48,7 +48,7 @@ const Club = () => {
     },
     "offers": {
       "@type": "Offer",
-      "price": "65",
+      "price": "35",
       "priceCurrency": "EUR",
       "availability": "https://schema.org/InStock",
       "url": "https://tantquelesoleilbrille.com/club"
@@ -221,7 +221,7 @@ const Club = () => {
               </div>
               <div className="bg-gradient-dawn p-6 rounded-xl">
                 <h4 className="font-playfair text-xl font-semibold text-[hsl(0,0%,0%)] mb-3">Tarifs</h4>
-                <p className="font-poppins text-3xl font-bold text-[hsl(var(--navbar-bg))] mb-2">65 €</p>
+                <p className="font-poppins text-3xl font-bold text-[hsl(var(--navbar-bg))] mb-2">35 €</p>
                 <p className="font-poppins text-sm text-[hsl(0,0%,0%)] mb-3">la session (1h30)</p>
                 <p className="font-poppins text-sm text-[hsl(0,0%,0%)]">
                   Carnet, boisson chaude et douceurs inclus.
